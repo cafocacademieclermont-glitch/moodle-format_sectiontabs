@@ -45,10 +45,16 @@
         {{> format_grettabs/local/sidemenu }}
     {{/gtabs}}
     <div class="gtabs-main">
+        {{#gsubtabs}}
+            {{> format_grettabs/local/subtabs }}
+        {{/gsubtabs}}
         {{> core_courseformat/local/content }}
     </div>
 </div>
 {{/gtabs.leftmenu}}
 {{^gtabs.leftmenu}}
+    {{#gsubtabs}}
+        {{> format_grettabs/local/subtabs }}
+    {{/gsubtabs}}
     {{> core_courseformat/local/content }}
 {{/gtabs.leftmenu}}

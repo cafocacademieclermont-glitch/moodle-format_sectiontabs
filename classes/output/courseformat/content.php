@@ -37,7 +37,52 @@ class content extends content_topics {
     public function export_for_template(renderer_base $output) {
         $data = parent::export_for_template($output);
         $data->gtabs = $this->export_tabs();
+        $data->gsubtabs = $this->export_subtabs();
         return $data;
+    }
+
+    /**
+     * Build the tabs of the subsections of the displayed section.
+     *
+     * Only on a single section page and outside editing mode: in editing mode
+     * every subsection stays visible so that it can be edited and moved.
+     *
+     * @return array|null null when there is nothing to show
+     */
+    protected function export_subtabs(): ?array {
+        /** @var \format_grettabs $format */
+        $format = $this->format;
+        $course = $format->get_course();
+        $sectionnum = $format->get_sectionnum();
+        if (empty($course->gtabssubtabs) || $sectionnum === null || $format->show_editor()) {
+            return null;
+        }
+        $modinfo = $format->get_modinfo();
+        $subtabs = [];
+        foreach ($modinfo->sections[$sectionnum] ?? [] as $cmid) {
+            $cm = $modinfo->get_cm($cmid);
+            $delegated = $cm->get_delegated_section_info();
+            if (!$delegated || !$cm->is_visible_on_course_page()) {
+                continue;
+            }
+            $fullname = $format->get_section_name($delegated);
+            $subtabs[] = [
+                'cmid' => $cm->id,
+                'num' => $delegated->section,
+                'name' => $fullname,
+                'title' => html_entity_decode(strip_tags($fullname), ENT_QUOTES, 'UTF-8'),
+                'hidden' => !$cm->visible,
+                'active' => empty($subtabs),
+            ];
+        }
+        if (empty($subtabs)) {
+            return null;
+        }
+        return [
+            'uniqid' => \html_writer::random_id('gsubtabs'),
+            'subtabs' => $subtabs,
+            'style' => '--gtabs-active:' . $format->get_tab_colour('activecolor') . ';',
+        ];
     }
 
     /**
