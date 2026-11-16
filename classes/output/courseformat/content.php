@@ -83,12 +83,11 @@ class content extends content_topics {
             return null;
         }
 
-        $activecolor = get_config('format_grettabs', 'activecolor') ?: '#ecb21e';
-        $activeborder = get_config('format_grettabs', 'activeborder') ?: '#2b1a10';
-
+        // Colours are validated hexadecimal values.
         return [
             'tabs' => $tabs,
-            'style' => '--gtabs-active:' . s($activecolor) . ';--gtabs-active-border:' . s($activeborder) . ';',
+            'style' => '--gtabs-active:' . $format->get_tab_colour('activecolor') .
+                ';--gtabs-active-border:' . $format->get_tab_colour('activeborder') . ';',
         ];
     }
 }

@@ -54,6 +54,14 @@ class format_grettabs extends format_topics {
             'default' => 0,
             'type' => PARAM_BOOL,
         ];
+        $options['gtabsactivecolor'] = [
+            'default' => '',
+            'type' => PARAM_TEXT,
+        ];
+        $options['gtabsactiveborder'] = [
+            'default' => '',
+            'type' => PARAM_TEXT,
+        ];
 
         if ($foreditform) {
             $options['gtabshome'] += [
@@ -68,8 +76,66 @@ class format_grettabs extends format_topics {
                 'help_component' => 'format_grettabs',
                 'element_type' => 'advcheckbox',
             ];
+            foreach (['gtabsactivecolor' => '#ecb21e', 'gtabsactiveborder' => '#2b1a10'] as $name => $placeholder) {
+                $options[$name] += [
+                    'label' => new lang_string($name, 'format_grettabs'),
+                    'help' => $name,
+                    'help_component' => 'format_grettabs',
+                    'element_type' => 'text',
+                    'element_attributes' => [
+                        ['size' => 10, 'maxlength' => 7, 'placeholder' => $placeholder],
+                    ],
+                ];
+            }
         }
         return $options;
+    }
+
+    /**
+     * Check that the tab colours are valid hexadecimal colours.
+     *
+     * @param array $data
+     * @param array $files
+     * @param array $errors
+     * @return array
+     */
+    public function edit_form_validation($data, $files, $errors) {
+        $formerrors = parent::edit_form_validation($data, $files, $errors);
+        foreach (['gtabsactivecolor', 'gtabsactiveborder'] as $name) {
+            $value = trim($data[$name] ?? '');
+            if ($value !== '' && self::clean_colour($value) === null) {
+                $formerrors[$name] = get_string('invalidcolour', 'format_grettabs');
+            }
+        }
+        return $formerrors;
+    }
+
+    /**
+     * Return a valid hexadecimal colour or null.
+     *
+     * @param string|null $value
+     * @return string|null
+     */
+    public static function clean_colour(?string $value): ?string {
+        $value = trim((string)$value);
+        if ($value !== '' && $value[0] !== '#') {
+            $value = '#' . $value;
+        }
+        return preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $value) ? strtolower($value) : null;
+    }
+
+    /**
+     * Colour of a tab element: the course setting, else the site setting, else the default.
+     *
+     * @param string $name 'activecolor' or 'activeborder'
+     * @return string
+     */
+    public function get_tab_colour(string $name): string {
+        $defaults = ['activecolor' => '#ecb21e', 'activeborder' => '#2b1a10'];
+        $course = $this->get_course();
+        return self::clean_colour($course->{'gtabs' . $name} ?? null)
+            ?? self::clean_colour(get_config('format_grettabs', $name))
+            ?? $defaults[$name];
     }
 
     /**

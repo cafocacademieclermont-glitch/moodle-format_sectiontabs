@@ -6,7 +6,7 @@ dans l'esprit du format « une section par onglet ».
 
 - La barre est construite automatiquement à partir des sections : rien à mettre à jour quand on ajoute,
   renomme, déplace ou masque une section.
-- L'onglet de la section affichée est mis en évidence (couleur réglable).
+- L'onglet de la section affichée est mis en évidence, avec une couleur réglable pour le site et pour chaque cours.
 - Les étudiants ne voient pas les sections qui leur sont cachées. Les enseignants les voient en grisé.
 - Les sous-sections (activité « Sous-section ») ne sont pas affichées dans la barre.
 - Le reste du cours fonctionne exactement comme le format Sections : index du cours, sous-sections,
@@ -30,6 +30,7 @@ Dans *Paramètres du cours → Format de cours*, choisir **Sections avec onglets
 | Option | Effet |
 | --- | --- |
 | L'accueil du cours n'affiche que la section générale | La page d'accueil du cours n'affiche que la section 0, chaque autre section s'ouvre sur sa propre page. En mode édition, la liste complète reste affichée pour pouvoir ajouter et déplacer les sections. |
+| Couleur de l'onglet actif / de son soulignement | Code hexadécimal (ex. `#ecb21e`). Vide : couleur définie par l'administrateur pour tout le site. |
 | Noms d'onglets courts | « Bloc de compétence 1 : Actes essentiels » devient « Bloc de compétence 1 ». Le nom complet s'affiche au survol. |
 
 Les sections et les activités sont conservées lors du changement de format.
