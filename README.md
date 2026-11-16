@@ -8,6 +8,7 @@ dans l'esprit du format « une section par onglet ».
   renomme, déplace ou masque une section.
 - L'onglet de la section affichée est mis en évidence, avec une couleur réglable pour le site et pour chaque cours.
 - Les étudiants ne voient pas les sections qui leur sont cachées. Les enseignants les voient en grisé.
+- Un menu vertical des sections peut aussi s'afficher à gauche du contenu.
 - Les sous-sections (activité « Sous-section ») ne sont pas affichées dans la barre.
 - Le reste du cours fonctionne exactement comme le format Sections : index du cours, sous-sections,
   mise en évidence, édition, glisser-déposer…
@@ -30,6 +31,7 @@ Dans *Paramètres du cours → Format de cours*, choisir **Sections avec onglets
 | Option | Effet |
 | --- | --- |
 | L'accueil du cours n'affiche que la section générale | La page d'accueil du cours n'affiche que la section 0, chaque autre section s'ouvre sur sa propre page. En mode édition, la liste complète reste affichée pour pouvoir ajouter et déplacer les sections. |
+| Menu des sections à gauche | Affiche aussi la liste des sections à gauche du contenu (masquée sur téléphone). Activé par défaut. |
 | Couleur de l'onglet actif / de son soulignement | Code hexadécimal (ex. `#ecb21e`). Vide : couleur définie par l'administrateur pour tout le site. |
 | Noms d'onglets courts | « Bloc de compétence 1 : Actes essentiels » devient « Bloc de compétence 1 ». Le nom complet s'affiche au survol. |
 

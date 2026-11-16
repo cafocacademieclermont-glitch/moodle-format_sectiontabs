@@ -22,9 +22,10 @@
     Example context (json):
     {
         "gtabs": {
+            "leftmenu": true,
             "style": "--gtabs-active:#ecb21e;--gtabs-active-border:#2b1a10;",
             "tabs": [
-                {"name": "Accueil", "title": "Accueil", "url": "#", "active": true},
+                {"name": "Accueil", "fullname": "Accueil", "title": "Accueil", "url": "#", "active": true},
                 {"name": "Bloc 1", "title": "Bloc 1 : Actes essentiels", "url": "#"}
             ]
         },
@@ -38,4 +39,16 @@
 {{#gtabs}}
     {{> format_grettabs/local/tabs }}
 {{/gtabs}}
-{{> core_courseformat/local/content }}
+{{#gtabs.leftmenu}}
+<div class="gtabs-layout" style="{{gtabs.style}}">
+    {{#gtabs}}
+        {{> format_grettabs/local/sidemenu }}
+    {{/gtabs}}
+    <div class="gtabs-main">
+        {{> core_courseformat/local/content }}
+    </div>
+</div>
+{{/gtabs.leftmenu}}
+{{^gtabs.leftmenu}}
+    {{> core_courseformat/local/content }}
+{{/gtabs.leftmenu}}

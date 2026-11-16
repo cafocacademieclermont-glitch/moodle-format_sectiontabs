@@ -71,6 +71,7 @@ class content extends content_topics {
             }
             $tabs[] = [
                 'name' => $name,
+                'fullname' => $fullname,
                 'title' => html_entity_decode(strip_tags($fullname), ENT_QUOTES, 'UTF-8'),
                 'url' => $format->get_tab_url($section)->out(false),
                 'active' => ((int)$section->section === (int)$current),
@@ -86,6 +87,7 @@ class content extends content_topics {
         // Colours are validated hexadecimal values.
         return [
             'tabs' => $tabs,
+            'leftmenu' => !empty($course->gtabsleftmenu),
             'style' => '--gtabs-active:' . $format->get_tab_colour('activecolor') .
                 ';--gtabs-active-border:' . $format->get_tab_colour('activeborder') . ';',
         ];

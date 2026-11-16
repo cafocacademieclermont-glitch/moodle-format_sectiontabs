@@ -54,6 +54,10 @@ class format_grettabs extends format_topics {
             'default' => 0,
             'type' => PARAM_BOOL,
         ];
+        $options['gtabsleftmenu'] = [
+            'default' => 1,
+            'type' => PARAM_BOOL,
+        ];
         $options['gtabsactivecolor'] = [
             'default' => '',
             'type' => PARAM_TEXT,
@@ -73,6 +77,12 @@ class format_grettabs extends format_topics {
             $options['gtabsshortnames'] += [
                 'label' => new lang_string('gtabsshortnames', 'format_grettabs'),
                 'help' => 'gtabsshortnames',
+                'help_component' => 'format_grettabs',
+                'element_type' => 'advcheckbox',
+            ];
+            $options['gtabsleftmenu'] += [
+                'label' => new lang_string('gtabsleftmenu', 'format_grettabs'),
+                'help' => 'gtabsleftmenu',
                 'help_component' => 'format_grettabs',
                 'element_type' => 'advcheckbox',
             ];

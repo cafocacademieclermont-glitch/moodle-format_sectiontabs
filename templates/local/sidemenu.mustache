@@ -1,0 +1,44 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_grettabs/local/sidemenu
+
+    Vertical list of the course sections, displayed on the left of the course content.
+
+    Example context (json):
+    {
+        "tabs": [
+            {"fullname": "Accueil et informations pratiques", "title": "Accueil et informations pratiques", "url": "#", "active": true},
+            {"fullname": "Bloc 1 : Actes essentiels", "title": "Bloc 1 : Actes essentiels", "url": "#", "hidden": true},
+            {"fullname": "Bloc 2", "title": "Bloc 2", "url": "#", "unavailable": true}
+        ]
+    }
+}}
+<nav class="gtabs-side" aria-label="{{#str}} sidemenunav, format_grettabs {{/str}}">
+    <ul class="gtabs-side-list">
+        {{#tabs}}
+        <li class="gtabs-side-item">
+            {{#unavailable}}
+            <span class="gtabs-side-link gtabs-unavailable{{#active}} gtabs-side-active{{/active}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{fullname}}}</span>
+            {{/unavailable}}
+            {{^unavailable}}
+            <a class="gtabs-side-link{{#active}} gtabs-side-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}" href="{{{url}}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{fullname}}}</a>
+            {{/unavailable}}
+        </li>
+        {{/tabs}}
+    </ul>
+</nav>
