@@ -1,0 +1,45 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_grettabs/local/tabs
+
+    Tab bar listing the course sections.
+
+    Example context (json):
+    {
+        "style": "--gtabs-active:#ecb21e;--gtabs-active-border:#2b1a10;",
+        "tabs": [
+            {"name": "Accueil", "title": "Accueil", "url": "#", "active": true},
+            {"name": "Bloc 1", "title": "Bloc 1 : Actes essentiels", "url": "#", "hidden": true},
+            {"name": "Bloc 2", "title": "Bloc 2", "url": "#", "unavailable": true}
+        ]
+    }
+}}
+<nav class="gtabs" style="{{style}}" aria-label="{{#str}} tabsnav, format_grettabs {{/str}}">
+    <ul class="gtabs-list">
+        {{#tabs}}
+        <li class="gtabs-item">
+            {{#unavailable}}
+            <span class="gtabs-tab gtabs-unavailable{{#active}} gtabs-active{{/active}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{name}}}</span>
+            {{/unavailable}}
+            {{^unavailable}}
+            <a class="gtabs-tab{{#active}} gtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}" href="{{{url}}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{name}}}</a>
+            {{/unavailable}}
+        </li>
+        {{/tabs}}
+    </ul>
+</nav>
