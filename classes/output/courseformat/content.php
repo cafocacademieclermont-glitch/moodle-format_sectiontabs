@@ -44,8 +44,8 @@ class content extends content_topics {
     /**
      * Build the tabs of the subsections of the displayed section.
      *
-     * Only on a single section page and outside editing mode: in editing mode
-     * every subsection stays visible so that it can be edited and moved.
+     * Only on a single section page. In editing mode an extra "Show all" tab
+     * displays every subsection so that they can be moved.
      *
      * @return array|null null when there is nothing to show
      */
@@ -54,15 +54,20 @@ class content extends content_topics {
         $format = $this->format;
         $course = $format->get_course();
         $sectionnum = $format->get_sectionnum();
-        if (empty($course->gtabssubtabs) || $sectionnum === null || $format->show_editor()) {
+        if (empty($course->gtabssubtabs) || $sectionnum === null) {
             return null;
         }
         $modinfo = $format->get_modinfo();
+        $canviewhidden = has_capability('moodle/course:viewhiddensections', $format->get_context());
         $subtabs = [];
         foreach ($modinfo->sections[$sectionnum] ?? [] as $cmid) {
             $cm = $modinfo->get_cm($cmid);
             $delegated = $cm->get_delegated_section_info();
             if (!$delegated || !$cm->is_visible_on_course_page()) {
+                continue;
+            }
+            // Hidden subsections never appear for users who cannot see hidden sections.
+            if ((!$cm->visible || !$delegated->visible) && !$canviewhidden) {
                 continue;
             }
             $fullname = $format->get_section_name($delegated);
@@ -81,6 +86,7 @@ class content extends content_topics {
         return [
             'uniqid' => \html_writer::random_id('gsubtabs'),
             'subtabs' => $subtabs,
+            'editing' => $format->show_editor(),
             'style' => '--gtabs-active:' . $format->get_tab_colour('activecolor') . ';',
         ];
     }
@@ -95,6 +101,7 @@ class content extends content_topics {
         $format = $this->format;
         $course = $format->get_course();
         $modinfo = $format->get_modinfo();
+        $canviewhidden = has_capability('moodle/course:viewhiddensections', $format->get_context());
 
         // Section shown on this page (the general section on the course home).
         $current = $format->get_sectionnum() ?? 0;
@@ -103,6 +110,11 @@ class content extends content_topics {
         $tabs = [];
         foreach ($modinfo->get_listed_section_info_all() as $section) {
             if (!$format->is_section_visible($section)) {
+                continue;
+            }
+            // Hidden sections never appear for users who cannot see hidden sections,
+            // even when the course shows them as unavailable.
+            if (!$section->visible && !$canviewhidden) {
                 continue;
             }
             $fullname = $format->get_section_name($section);

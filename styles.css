@@ -170,6 +170,6 @@
     font-style: italic;
 }
 
-li.gsubtabs-panel-hidden {
-    display: none !important;
+.gsubtabs .gsubtabs-all {
+    font-style: italic;
 }

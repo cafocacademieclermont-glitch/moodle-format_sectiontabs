@@ -26,7 +26,8 @@
         "subtabs": [
             {"cmid": 10, "num": 12, "name": "Classe virtuelle", "title": "Classe virtuelle", "active": true},
             {"cmid": 11, "num": 13, "name": "S'informer", "title": "S'informer", "hidden": true}
-        ]
+        ],
+        "editing": true
     }
 }}
 <nav id="{{uniqid}}" class="gsubtabs" style="{{style}}" aria-label="{{#str}} subtabsnav, format_grettabs {{/str}}">
@@ -38,6 +39,11 @@
                {{#active}}aria-current="true"{{/active}}>{{{name}}}</a>
         </li>
         {{/subtabs}}
+        {{#editing}}
+        <li class="gsubtabs-item gsubtabs-item-all">
+            <a class="gsubtabs-tab gsubtabs-all" href="#" data-gsubtab="all">{{#str}} subtabsshowall, format_grettabs {{/str}}</a>
+        </li>
+        {{/editing}}
     </ul>
 </nav>
 {{#js}}
@@ -47,7 +53,12 @@
         return;
     }
     var tabs = Array.prototype.slice.call(nav.querySelectorAll('[data-gsubtab]'));
+    // The hidden subsections are hidden by a style rule rather than a class on the
+    // elements, so that they stay hidden when the course editor re-renders them.
+    var rules = document.createElement('style');
+    document.head.appendChild(rules);
     var show = function(tab) {
+        var hidden = [];
         tabs.forEach(function(other) {
             var on = (other === tab);
             other.classList.toggle('gsubtabs-active', on);
@@ -56,11 +67,11 @@
             } else {
                 other.removeAttribute('aria-current');
             }
-            var item = document.querySelector('li[data-for="cmitem"][data-id="' + other.dataset.gsubtab + '"]');
-            if (item) {
-                item.classList.toggle('gsubtabs-panel-hidden', !on);
+            if (!on && tab.dataset.gsubtab !== 'all' && other.dataset.gsubtab !== 'all') {
+                hidden.push('#region-main li[data-for="cmitem"][data-id="' + other.dataset.gsubtab + '"]');
             }
         });
+        rules.textContent = hidden.length ? hidden.join(',') + '{display:none !important;}' : '';
     };
     var fromHash = function() {
         var match = /^#section-(\d+)$/.exec(window.location.hash);
@@ -74,7 +85,8 @@
             e.preventDefault();
             show(tab);
             if (window.history && window.history.replaceState) {
-                window.history.replaceState(null, '', '#section-' + tab.dataset.num);
+                var hash = tab.dataset.num ? '#section-' + tab.dataset.num : '';
+                window.history.replaceState(null, '', window.location.pathname + window.location.search + hash);
             }
         });
     });
