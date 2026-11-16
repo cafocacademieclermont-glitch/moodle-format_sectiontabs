@@ -77,6 +77,8 @@ class content extends content_topics {
                 'name' => $fullname,
                 'title' => html_entity_decode(strip_tags($fullname), ENT_QUOTES, 'UTF-8'),
                 'hidden' => !$cm->visible,
+                // Restricted for this user but displayed with its restriction message.
+                'unavailable' => !$cm->uservisible || !$delegated->uservisible,
                 'active' => empty($subtabs),
             ];
         }

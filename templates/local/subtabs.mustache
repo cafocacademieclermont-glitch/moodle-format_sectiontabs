@@ -25,7 +25,8 @@
         "style": "--gtabs-active:#ecb21e;",
         "subtabs": [
             {"cmid": 10, "num": 12, "name": "Classe virtuelle", "title": "Classe virtuelle", "active": true},
-            {"cmid": 11, "num": 13, "name": "S'informer", "title": "S'informer", "hidden": true}
+            {"cmid": 11, "num": 13, "name": "S'informer", "title": "S'informer", "hidden": true},
+            {"cmid": 12, "num": 14, "name": "Dire", "title": "Dire", "unavailable": true}
         ],
         "editing": true
     }
@@ -34,7 +35,7 @@
     <ul class="gsubtabs-list">
         {{#subtabs}}
         <li class="gsubtabs-item">
-            <a class="gsubtabs-tab{{#active}} gsubtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}"
+            <a class="gsubtabs-tab{{#active}} gsubtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}{{#unavailable}} gsubtabs-unavailable{{/unavailable}}"
                href="#section-{{num}}" title="{{title}}" data-gsubtab="{{cmid}}" data-num="{{num}}"
                {{#active}}aria-current="true"{{/active}}>{{{name}}}</a>
         </li>

@@ -7,6 +7,7 @@ dans l'esprit du format « une section par onglet ».
 - La barre est construite automatiquement à partir des sections : rien à mettre à jour quand on ajoute,
   renomme, déplace ou masque une section.
 - L'onglet de la section affichée est mis en évidence, avec une couleur réglable pour le site et pour chaque cours.
+- Les restrictions d'accès (groupe, date, achèvement…) sont respectées : une section ou sous-section restreinte « masquée complètement » n'apparaît pas pour les étudiants concernés ; restreinte « affichée grisée », son onglet est grisé.
 - Les étudiants ne voient jamais les sections ni les sous-sections cachées, même si le cours affiche les sections cachées comme « non disponibles ». Les enseignants les voient en grisé.
 - Un menu vertical des sections peut aussi s'afficher à gauche du contenu.
 - Les sous-sections (activité « Sous-section ») ne sont pas dans la barre principale : sur la page d'une section, elles s'affichent dans une seconde rangée d'onglets, une seule à la fois.
