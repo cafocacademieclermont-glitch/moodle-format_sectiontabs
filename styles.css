@@ -1,11 +1,13 @@
 /* Format "Onglets et menu de sections" (format_sectiontabs).
+ * Les couleurs neutres utilisent les variables de Bootstrap (--bs-*) : elles suivent le mode clair ou sombre du thème.
  * Les couleurs de l'onglet actif viennent des propriétés --gtabs-active, --gtabs-active-text
  * (choisie automatiquement pour un contraste suffisant) et --gtabs-active-border.
  */
 
 /* Barre d'onglets. */
 .gtabs {
-    background-color: #fff;
+    background-color: var(--bs-body-bg, #fff);
+    border: 1px solid var(--bs-border-color-translucent, transparent);
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
     padding: 12px;
@@ -29,9 +31,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: .7rem 1.4rem;
-    background-color: #f3f1f0;
-    color: #3b2f2f;
-    border: 1px solid #e4e0de;
+    background-color: var(--bs-tertiary-bg, #f3f1f0);
+    color: var(--bs-body-color, #3b2f2f);
+    border: 1px solid var(--bs-border-color, #e4e0de);
     border-radius: 10px;
     font-weight: 700;
     text-decoration: none;
@@ -40,8 +42,8 @@
 
 .gtabs a.gtabs-tab:hover,
 .gtabs a.gtabs-tab:focus {
-    background-color: #e9e5e3;
-    color: #3b2f2f;
+    background-color: var(--bs-secondary-bg, #e9e5e3);
+    color: var(--bs-body-color, #3b2f2f);
     text-decoration: none;
 }
 
@@ -64,8 +66,8 @@
 .gtabs-layout .gtabs-side {
     flex: 0 0 250px;
     max-width: 250px;
-    border-right: 1px solid #dee2e6;
-    border-bottom: 1px solid #dee2e6;
+    border-right: 1px solid var(--bs-border-color, #dee2e6);
+    border-bottom: 1px solid var(--bs-border-color, #dee2e6);
 }
 
 .gtabs-layout .gtabs-main {
@@ -85,28 +87,28 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: .55rem 1rem;
-    color: #1d2125;
+    color: var(--bs-body-color, #1d2125);
     text-decoration: underline;
     border: 1px solid transparent;
 }
 
 .gtabs-side a.gtabs-side-link:hover,
 .gtabs-side a.gtabs-side-link:focus {
-    background-color: #f3f1f0;
-    color: #1d2125;
+    background-color: var(--bs-tertiary-bg, #f3f1f0);
+    color: var(--bs-body-color, #1d2125);
 }
 
 .gtabs-side .gtabs-side-link.gtabs-side-active {
     font-weight: 700;
-    border-color: #dee2e6;
-    border-right-color: #fff;
+    border-color: var(--bs-border-color, #dee2e6);
+    border-right-color: var(--bs-body-bg, #fff);
     border-left: 4px solid var(--gtabs-active, #ecb21e);
-    background-color: #fff;
+    background-color: var(--bs-body-bg, #fff);
 }
 
 /* Onglets des sous-sections, à l'intérieur d'une section. */
 .gsubtabs {
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid var(--bs-border-color, #dee2e6);
     margin: 0 0 1rem 0;
 }
 
@@ -122,15 +124,15 @@
 .gsubtabs .gsubtabs-tab {
     display: inline-block;
     padding: .55rem 1rem;
-    color: #1d2125;
+    color: var(--bs-body-color, #1d2125);
     text-decoration: underline;
     border-radius: 6px 6px 0 0;
 }
 
 .gsubtabs a.gsubtabs-tab:hover,
 .gsubtabs a.gsubtabs-tab:focus {
-    background-color: #f3f1f0;
-    color: #1d2125;
+    background-color: var(--bs-tertiary-bg, #f3f1f0);
+    color: var(--bs-body-color, #1d2125);
 }
 
 .gsubtabs .gsubtabs-tab.gsubtabs-active,
@@ -152,15 +154,15 @@
 .gtabs-side .gtabs-unavailable,
 .gsubtabs .gtabs-hidden,
 .gsubtabs .gsubtabs-unavailable {
-    color: #575a5e;
+    color: var(--bs-secondary-color, #575a5e);
     font-style: italic;
 }
 
 .gtabs .gtabs-tab.gtabs-hidden,
 .gtabs .gtabs-tab.gtabs-unavailable {
     border-style: dashed;
-    border-color: #8a8d91;
-    background-color: #f8f9fa;
+    border-color: var(--bs-secondary-color, #8a8d91);
+    background-color: var(--bs-body-bg, #f8f9fa);
 }
 
 .gtabs .gtabs-unavailable,
@@ -181,9 +183,9 @@
 .gtabs a.gtabs-tab:focus-visible,
 .gtabs-side a.gtabs-side-link:focus-visible,
 .gsubtabs a.gsubtabs-tab:focus-visible {
-    outline: 3px solid #0f6cbf;
+    outline: 3px solid var(--bs-link-color, #0f6cbf);
     outline-offset: 2px;
-    box-shadow: 0 0 0 5px #fff;
+    box-shadow: 0 0 0 5px var(--bs-body-bg, #fff);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -219,7 +221,7 @@
     gap: 1rem;
     margin: 1.5rem 0 1rem 0;
     padding-top: 1rem;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid var(--bs-border-color, #dee2e6);
 }
 
 .gnav .gnav-link {
@@ -228,10 +230,10 @@
     max-width: 48%;
     min-width: 0;
     padding: .6rem 1rem;
-    border: 1px solid #e4e0de;
+    border: 1px solid var(--bs-border-color, #e4e0de);
     border-radius: 10px;
-    background-color: #f3f1f0;
-    color: #3b2f2f;
+    background-color: var(--bs-tertiary-bg, #f3f1f0);
+    color: var(--bs-body-color, #3b2f2f);
     text-decoration: none;
 }
 
@@ -260,7 +262,7 @@
 }
 
 .gnav a.gnav-link:focus-visible {
-    outline: 3px solid #0f6cbf;
+    outline: 3px solid var(--bs-link-color, #0f6cbf);
     outline-offset: 2px;
-    box-shadow: 0 0 0 5px #fff;
+    box-shadow: 0 0 0 5px var(--bs-body-bg, #fff);
 }

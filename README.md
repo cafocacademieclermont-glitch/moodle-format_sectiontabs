@@ -1,5 +1,7 @@
 # Onglets et menu de sections (format_sectiontabs)
 
+**Version 1.0 (stable)** — Moodle 5.3. Voir [CHANGES.md](CHANGES.md).
+
 Format de cours Moodle qui reprend le format standard **Sections** (`format_topics`) et ajoute
 au-dessus de chaque page du cours une **barre d'onglets automatique** donnant accès à toutes les sections,
 dans l'esprit du format « une section par onglet ».
@@ -82,6 +84,8 @@ Le gabarit de la barre est `templates/local/tabs.mustache` et peut être surchar
 (`theme/MONTHEME/templates/format_sectiontabs/local/tabs.mustache`).
 
 ## Accessibilité
+
+Les couleurs neutres suivent le mode clair ou sombre du thème (variables de couleur de Bootstrap, par exemple le mode sombre de Moove).
 
 Vérifié avec axe-core (WCAG 2.1 / 2.2 niveau AA), au clavier et avec les attributs lus par les lecteurs d'écran :
 
