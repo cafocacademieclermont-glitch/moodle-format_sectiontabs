@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 }}
 {{!
-    @template format_grettabs/local/content
+    @template format_sectiontabs/local/content
 
     Tab bar followed by the standard course content.
 
@@ -34,7 +34,7 @@
             ]
         },
         "sections": [],
-        "format": "grettabs",
+        "format": "sectiontabs",
         "title": "Course",
         "sectionreturn": "null",
         "pagesectionid": "null"
@@ -42,17 +42,17 @@
 }}
 {{#gtabs.hastabs}}
     {{#gtabs}}
-        {{> format_grettabs/local/tabs }}
+        {{> format_sectiontabs/local/tabs }}
     {{/gtabs}}
 {{/gtabs.hastabs}}
 {{#gtabs.leftmenu}}
 <div class="gtabs-layout" style="{{gtabs.style}}">
     {{#gtabs}}
-        {{> format_grettabs/local/sidemenu }}
+        {{> format_sectiontabs/local/sidemenu }}
     {{/gtabs}}
     <div class="gtabs-main">
         {{#gsubtabs}}
-            {{> format_grettabs/local/subtabs }}
+            {{> format_sectiontabs/local/subtabs }}
         {{/gsubtabs}}
         {{> core_courseformat/local/content }}
     </div>
@@ -60,7 +60,7 @@
 {{/gtabs.leftmenu}}
 {{^gtabs.leftmenu}}
     {{#gsubtabs}}
-        {{> format_grettabs/local/subtabs }}
+        {{> format_sectiontabs/local/subtabs }}
     {{/gsubtabs}}
     {{> core_courseformat/local/content }}
 {{/gtabs.leftmenu}}

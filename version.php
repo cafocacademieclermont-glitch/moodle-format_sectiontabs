@@ -17,18 +17,18 @@
 /**
  * Version details.
  *
- * @package    format_grettabs
+ * @package    format_sectiontabs
  * @copyright  2026 Eric Falcon
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'format_grettabs';
-$plugin->version   = 2026111701;
+$plugin->component = 'format_sectiontabs';
+$plugin->version   = 2026111702;
 $plugin->requires  = 2026100200; // Moodle 5.3.
 $plugin->maturity  = MATURITY_BETA;
-$plugin->release   = '0.5.1';
+$plugin->release   = '0.6.0';
 $plugin->dependencies = [
     'format_topics' => ANY_VERSION,
 ];

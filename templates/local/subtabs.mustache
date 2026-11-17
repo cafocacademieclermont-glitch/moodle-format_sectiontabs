@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 }}
 {{!
-    @template format_grettabs/local/subtabs
+    @template format_sectiontabs/local/subtabs
 
     Tabs of the subsections of a section: only the subsection of the selected tab is displayed.
 
@@ -32,19 +32,19 @@
     }
 }}
 <div id="{{uniqid}}" class="gsubtabs" style="{{style}}">
-    <ul class="gsubtabs-list" role="tablist" aria-label="{{#str}} subtabsnav, format_grettabs {{/str}}">
+    <ul class="gsubtabs-list" role="tablist" aria-label="{{#str}} subtabsnav, format_sectiontabs {{/str}}">
         {{#subtabs}}
         <li class="gsubtabs-item" role="presentation">
             <a class="gsubtabs-tab{{#active}} gsubtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}{{#unavailable}} gsubtabs-unavailable{{/unavailable}}"
                id="{{uniqid}}-tab-{{cmid}}" href="#section-{{num}}" role="tab" aria-controls="module-{{cmid}}"
                aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}" tabindex="{{#active}}0{{/active}}{{^active}}-1{{/active}}"
-               title="{{title}}" data-gsubtab="{{cmid}}" data-num="{{num}}">{{{name}}}{{#hidden}}<span class="visually-hidden"> ({{#str}} hiddenfromstudents, format_grettabs {{/str}})</span>{{/hidden}}{{#unavailable}}<span class="visually-hidden"> ({{#str}} notavailable, format_grettabs {{/str}})</span>{{/unavailable}}</a>
+               title="{{title}}" data-gsubtab="{{cmid}}" data-num="{{num}}">{{{name}}}{{#hidden}}<span class="visually-hidden"> ({{#str}} hiddenfromstudents, format_sectiontabs {{/str}})</span>{{/hidden}}{{#unavailable}}<span class="visually-hidden"> ({{#str}} notavailable, format_sectiontabs {{/str}})</span>{{/unavailable}}</a>
         </li>
         {{/subtabs}}
         {{#editing}}
         <li class="gsubtabs-item gsubtabs-item-all" role="presentation">
             <a class="gsubtabs-tab gsubtabs-all" id="{{uniqid}}-tab-all" href="#" role="tab" aria-selected="false" tabindex="-1"
-               data-gsubtab="all">{{#str}} subtabsshowall, format_grettabs {{/str}}</a>
+               data-gsubtab="all">{{#str}} subtabsshowall, format_sectiontabs {{/str}}</a>
         </li>
         {{/editing}}
     </ul>

@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Main class of the "Sections with tabs" course format.
+ * Main class of the "Tabs and section menu" course format.
  *
  * It behaves exactly like the core "Custom sections" (topics) format and adds
  * an automatic tab bar, built from the course sections, above every course page.
  *
- * @package    format_grettabs
+ * @package    format_sectiontabs
  * @copyright  2026 Eric Falcon
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,7 +35,7 @@ use core\lang_string;
 /**
  * Course format class.
  */
-class format_grettabs extends format_topics {
+class format_sectiontabs extends format_topics {
     /** @var int One tab per section. */
     public const TABS_SECTIONS = 0;
 
@@ -86,56 +86,56 @@ class format_grettabs extends format_topics {
 
         if ($foreditform) {
             $options['gtabsmode'] += [
-                'label' => new lang_string('gtabsmode', 'format_grettabs'),
+                'label' => new lang_string('gtabsmode', 'format_sectiontabs'),
                 'help' => 'gtabsmode',
-                'help_component' => 'format_grettabs',
+                'help_component' => 'format_sectiontabs',
                 'element_type' => 'select',
                 'element_attributes' => [
                     [
-                        self::TABS_SECTIONS => new lang_string('gtabsmode_sections', 'format_grettabs'),
-                        self::TABS_CUSTOM => new lang_string('gtabsmode_custom', 'format_grettabs'),
+                        self::TABS_SECTIONS => new lang_string('gtabsmode_sections', 'format_sectiontabs'),
+                        self::TABS_CUSTOM => new lang_string('gtabsmode_custom', 'format_sectiontabs'),
                     ],
                 ],
             ];
             $options['gtabscustom'] += [
-                'label' => new lang_string('gtabscustom', 'format_grettabs'),
+                'label' => new lang_string('gtabscustom', 'format_sectiontabs'),
                 'help' => 'gtabscustom',
-                'help_component' => 'format_grettabs',
+                'help_component' => 'format_sectiontabs',
                 'element_type' => 'textarea',
                 'element_attributes' => [
                     ['rows' => 8, 'cols' => 60,
-                     'placeholder' => get_string('gtabscustom_placeholder', 'format_grettabs')],
+                     'placeholder' => get_string('gtabscustom_placeholder', 'format_sectiontabs')],
                 ],
             ];
             $options['gtabshome'] += [
-                'label' => new lang_string('gtabshome', 'format_grettabs'),
+                'label' => new lang_string('gtabshome', 'format_sectiontabs'),
                 'help' => 'gtabshome',
-                'help_component' => 'format_grettabs',
+                'help_component' => 'format_sectiontabs',
                 'element_type' => 'advcheckbox',
             ];
             $options['gtabsshortnames'] += [
-                'label' => new lang_string('gtabsshortnames', 'format_grettabs'),
+                'label' => new lang_string('gtabsshortnames', 'format_sectiontabs'),
                 'help' => 'gtabsshortnames',
-                'help_component' => 'format_grettabs',
+                'help_component' => 'format_sectiontabs',
                 'element_type' => 'advcheckbox',
             ];
             $options['gtabsleftmenu'] += [
-                'label' => new lang_string('gtabsleftmenu', 'format_grettabs'),
+                'label' => new lang_string('gtabsleftmenu', 'format_sectiontabs'),
                 'help' => 'gtabsleftmenu',
-                'help_component' => 'format_grettabs',
+                'help_component' => 'format_sectiontabs',
                 'element_type' => 'advcheckbox',
             ];
             $options['gtabssubtabs'] += [
-                'label' => new lang_string('gtabssubtabs', 'format_grettabs'),
+                'label' => new lang_string('gtabssubtabs', 'format_sectiontabs'),
                 'help' => 'gtabssubtabs',
-                'help_component' => 'format_grettabs',
+                'help_component' => 'format_sectiontabs',
                 'element_type' => 'advcheckbox',
             ];
             foreach (['gtabsactivecolor' => '#ecb21e', 'gtabsactiveborder' => '#2b1a10'] as $name => $placeholder) {
                 $options[$name] += [
-                    'label' => new lang_string($name, 'format_grettabs'),
+                    'label' => new lang_string($name, 'format_sectiontabs'),
                     'help' => $name,
-                    'help_component' => 'format_grettabs',
+                    'help_component' => 'format_sectiontabs',
                     'element_type' => 'text',
                     'element_attributes' => [
                         ['size' => 10, 'maxlength' => 7, 'placeholder' => $placeholder],
@@ -175,10 +175,10 @@ class format_grettabs extends format_topics {
             $parsed = self::parse_custom_tabs($data['gtabscustom'] ?? '');
             $messages = [];
             foreach ($parsed['errors'] as $linenum) {
-                $messages[] = get_string('gtabscustom_badline', 'format_grettabs', $linenum);
+                $messages[] = get_string('gtabscustom_badline', 'format_sectiontabs', $linenum);
             }
             if (empty($parsed['tabs']) && empty($parsed['errors'])) {
-                $messages[] = get_string('gtabscustom_empty', 'format_grettabs');
+                $messages[] = get_string('gtabscustom_empty', 'format_sectiontabs');
             }
             // Check the section names against the sections of the course (when it already exists).
             // The format instance used for validation is not always tied to the course.
@@ -195,7 +195,7 @@ class format_grettabs extends format_topics {
                         if (empty($known[self::normalise_name($name)])) {
                             $messages[] = get_string(
                                 'gtabscustom_unknown',
-                                'format_grettabs',
+                                'format_sectiontabs',
                                 ['line' => $tab['line'], 'name' => s($name)]
                             );
                         }
@@ -209,7 +209,7 @@ class format_grettabs extends format_topics {
         foreach (['gtabsactivecolor', 'gtabsactiveborder'] as $name) {
             $value = trim($data[$name] ?? '');
             if ($value !== '' && self::clean_colour($value) === null) {
-                $formerrors[$name] = get_string('invalidcolour', 'format_grettabs');
+                $formerrors[$name] = get_string('invalidcolour', 'format_sectiontabs');
             }
         }
         return $formerrors;
@@ -333,7 +333,7 @@ class format_grettabs extends format_topics {
         $defaults = ['activecolor' => '#ecb21e', 'activeborder' => '#2b1a10'];
         $course = $this->get_course();
         return self::clean_colour($course->{'gtabs' . $name} ?? null)
-            ?? self::clean_colour(get_config('format_grettabs', $name))
+            ?? self::clean_colour(get_config('format_sectiontabs', $name))
             ?? $defaults[$name];
     }
 
@@ -364,13 +364,13 @@ class format_grettabs extends format_topics {
  * @param mixed $newvalue
  * @return \core\output\inplace_editable
  */
-function format_grettabs_inplace_editable($itemtype, $itemid, $newvalue) {
+function format_sectiontabs_inplace_editable($itemtype, $itemid, $newvalue) {
     global $DB, $CFG;
     require_once($CFG->dirroot . '/course/lib.php');
     if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
         $section = $DB->get_record_sql(
             'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-            [$itemid, 'grettabs'],
+            [$itemid, 'sectiontabs'],
             MUST_EXIST
         );
         return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace format_grettabs\output\courseformat;
+namespace format_sectiontabs\output\courseformat;
 
 use format_topics\output\courseformat\content as content_topics;
 use renderer_base;
@@ -22,7 +22,7 @@ use renderer_base;
 /**
  * Course content output: the topics content plus the tab bar.
  *
- * @package    format_grettabs
+ * @package    format_sectiontabs
  * @copyright  2026 Eric Falcon
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -49,7 +49,7 @@ class content extends content_topics {
      * @return array|null null when there is nothing to show
      */
     protected function export_subtabs(): ?array {
-        /** @var \format_grettabs $format */
+        /** @var \format_sectiontabs $format */
         $format = $this->format;
         $course = $format->get_course();
         $sectionnum = $format->get_sectionnum();
@@ -98,7 +98,7 @@ class content extends content_topics {
      * @return array|null null when there is nothing to show
      */
     protected function export_tabs(): ?array {
-        /** @var \format_grettabs $format */
+        /** @var \format_sectiontabs $format */
         $format = $this->format;
         $course = $format->get_course();
         $modinfo = $format->get_modinfo();
@@ -115,7 +115,7 @@ class content extends content_topics {
         foreach ($modinfo->get_listed_section_info_all() as $section) {
             $fullname = $format->get_section_name($section);
             foreach ([$fullname, (string)$section->name] as $name) {
-                $key = \format_grettabs::normalise_name($name);
+                $key = \format_sectiontabs::normalise_name($name);
                 if ($key !== '' && !isset($bynames[$key])) {
                     $bynames[$key] = (int)$section->section;
                 }
@@ -147,7 +147,7 @@ class content extends content_topics {
             ];
         }
 
-        if ((int)($course->gtabsmode ?? 0) === \format_grettabs::TABS_CUSTOM) {
+        if ((int)($course->gtabsmode ?? 0) === \format_sectiontabs::TABS_CUSTOM) {
             $tabs = $this->export_custom_tabs($sections, $bynames, $current);
             $hastabs = !empty($tabs);
         } else {
@@ -181,7 +181,7 @@ class content extends content_topics {
     protected function export_custom_tabs(array $sections, array $bynames, int $current): array {
         $course = $this->format->get_course();
         $context = $this->format->get_context();
-        $parsed = \format_grettabs::parse_custom_tabs((string)($course->gtabscustom ?? ''));
+        $parsed = \format_sectiontabs::parse_custom_tabs((string)($course->gtabscustom ?? ''));
 
         $tabs = [];
         foreach ($parsed['tabs'] as $definition) {
@@ -203,7 +203,7 @@ class content extends content_topics {
             // Sections targeted by the tab that this user can see.
             $targets = [];
             foreach ($definition['sections'] as $name) {
-                $num = $bynames[\format_grettabs::normalise_name($name)] ?? null;
+                $num = $bynames[\format_sectiontabs::normalise_name($name)] ?? null;
                 if ($num !== null && isset($sections[$num])) {
                     $targets[$num] = $sections[$num];
                 }

@@ -17,7 +17,7 @@
 /**
  * English strings.
  *
- * @package    format_grettabs
+ * @package    format_sectiontabs
  * @copyright  2026 Eric Falcon
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -68,11 +68,11 @@ $string['invalidcolour'] = 'Enter a hexadecimal colour code, for example #ecb21e
 $string['newsection'] = 'New section';
 $string['notavailable'] = 'not available';
 $string['opensinnewwindow'] = 'opens in a new window';
-$string['page-course-view-grettabs'] = 'Any course main page in sections with tabs format';
-$string['page-course-view-grettabs-x'] = 'Any course page in sections with tabs format';
-$string['plugin_description'] = 'Custom sections with an automatic tab bar giving access to every section.';
-$string['pluginname'] = 'Sections with tabs';
-$string['privacy:metadata'] = 'The Sections with tabs format plugin does not store any personal data.';
+$string['page-course-view-sectiontabs'] = 'Any course main page in tabs and section menu format';
+$string['page-course-view-sectiontabs-x'] = 'Any course page in tabs and section menu format';
+$string['plugin_description'] = 'One section per page, with a tab bar and a section menu giving access to every section, and subsections displayed as tabs.';
+$string['pluginname'] = 'Tabs and section menu';
+$string['privacy:metadata'] = 'The Tabs and section menu format plugin does not store any personal data.';
 $string['section0name'] = 'General';
 $string['sectionname'] = 'Section';
 $string['showfromothers'] = 'Show';

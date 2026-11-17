@@ -17,7 +17,7 @@
 /**
  * Site settings of the format.
  *
- * @package    format_grettabs
+ * @package    format_sectiontabs
  * @copyright  2026 Eric Falcon
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,15 +26,15 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcolourpicker(
-        'format_grettabs/activecolor',
-        new lang_string('activecolor', 'format_grettabs'),
-        new lang_string('activecolor_desc', 'format_grettabs'),
+        'format_sectiontabs/activecolor',
+        new lang_string('activecolor', 'format_sectiontabs'),
+        new lang_string('activecolor_desc', 'format_sectiontabs'),
         '#ecb21e'
     ));
     $settings->add(new admin_setting_configcolourpicker(
-        'format_grettabs/activeborder',
-        new lang_string('activeborder', 'format_grettabs'),
-        new lang_string('activeborder_desc', 'format_grettabs'),
+        'format_sectiontabs/activeborder',
+        new lang_string('activeborder', 'format_sectiontabs'),
+        new lang_string('activeborder_desc', 'format_sectiontabs'),
         '#2b1a10'
     ));
 }

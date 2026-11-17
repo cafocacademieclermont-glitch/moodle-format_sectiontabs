@@ -17,7 +17,7 @@
 /**
  * Chaînes en français.
  *
- * @package    format_grettabs
+ * @package    format_sectiontabs
  * @copyright  2026 Eric Falcon
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -68,11 +68,11 @@ $string['invalidcolour'] = 'Saisissez un code couleur hexadécimal, par exemple 
 $string['newsection'] = 'Nouvelle section';
 $string['notavailable'] = 'non disponible';
 $string['opensinnewwindow'] = 's\'ouvre dans une nouvelle fenêtre';
-$string['page-course-view-grettabs'] = 'Toute page principale de cours au format Sections avec onglets';
-$string['page-course-view-grettabs-x'] = 'Toute page de cours au format Sections avec onglets';
-$string['plugin_description'] = 'Sections personnalisées avec une barre d\'onglets automatique donnant accès à chaque section.';
-$string['pluginname'] = 'Sections avec onglets';
-$string['privacy:metadata'] = 'Le format Sections avec onglets n\'enregistre aucune donnée personnelle.';
+$string['page-course-view-sectiontabs'] = 'Toute page principale de cours au format Onglets et menu de sections';
+$string['page-course-view-sectiontabs-x'] = 'Toute page de cours au format Onglets et menu de sections';
+$string['plugin_description'] = 'Une section par page, avec une barre d\'onglets et un menu des sections donnant accès à chaque section, et les sous-sections affichées en onglets.';
+$string['pluginname'] = 'Onglets et menu de sections';
+$string['privacy:metadata'] = 'Le format Onglets et menu de sections n\'enregistre aucune donnée personnelle.';
 $string['section0name'] = 'Généralités';
 $string['sectionname'] = 'Section';
 $string['showfromothers'] = 'Afficher';

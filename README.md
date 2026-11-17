@@ -1,4 +1,4 @@
-# Sections avec onglets (format_grettabs)
+# Onglets et menu de sections (format_sectiontabs)
 
 Format de cours Moodle qui reprend le format standard **Sections** (`format_topics`) et ajoute
 au-dessus de chaque page du cours une **barre d'onglets automatique** donnant accès à toutes les sections,
@@ -20,14 +20,24 @@ Moodle 5.3 (testé sur 5.3.1). Le format standard **Sections** (`format_topics`)
 
 ## Installation (administrateur)
 
-1. Copier le dossier dans `public/course/format/grettabs` (le dossier doit s'appeler `grettabs`),
+1. Copier le dossier dans `public/course/format/sectiontabs` (le dossier doit s'appeler `sectiontabs`),
    ou installer le zip depuis *Administration du site → Plugins → Installer des plugins*.
 2. Lancer la mise à jour depuis *Administration du site → Notifications*.
-3. Facultatif : régler les couleurs dans *Administration du site → Plugins → Formats de cours → Sections avec onglets*.
+3. Facultatif : régler les couleurs dans *Administration du site → Plugins → Formats de cours → Onglets et menu de sections*.
+
+### Passer de l'ancien nom `grettabs` au nouveau nom `sectiontabs`
+
+Jusqu'à la version 0.5.1, le plugin s'appelait `format_grettabs`. Ce sont deux plugins différents pour Moodle :
+
+1. Installer `sectiontabs` (dossier `public/course/format/sectiontabs`).
+2. Dans chaque cours au format `grettabs`, choisir le format **Onglets et menu de sections** et refaire les réglages des onglets.
+3. Désinstaller `grettabs` (*Administration du site → Plugins → Vue d'ensemble des plugins*). Si Moodle affiche l'erreur
+   `err_unexpected_plugin_rootdir`, supprimer à la main le dossier `public/course/format/grettabs` sur le serveur,
+   puis ouvrir *Administration du site → Notifications*.
 
 ## Utilisation (enseignant)
 
-Dans *Paramètres du cours → Format de cours*, choisir **Sections avec onglets**. Deux options s'ajoutent :
+Dans *Paramètres du cours → Format de cours*, choisir **Onglets et menu de sections**. Deux options s'ajoutent :
 
 | Option | Effet |
 | --- | --- |
@@ -63,7 +73,7 @@ Ressources | https://exemple.fr/ressources
 
 L'apparence est définie dans `styles.css` (classes `.gtabs`, `.gtabs-tab`, `.gtabs-active`).
 Le gabarit de la barre est `templates/local/tabs.mustache` et peut être surchargé par un thème
-(`theme/MONTHEME/templates/format_grettabs/local/tabs.mustache`).
+(`theme/MONTHEME/templates/format_sectiontabs/local/tabs.mustache`).
 
 ## Accessibilité
 

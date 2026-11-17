@@ -1,4 +1,4 @@
-/* Format "Sections avec onglets" (format_grettabs).
+/* Format "Onglets et menu de sections" (format_sectiontabs).
  * Les couleurs de l'onglet actif viennent des propriétés --gtabs-active, --gtabs-active-text
  * (choisie automatiquement pour un contraste suffisant) et --gtabs-active-border.
  */

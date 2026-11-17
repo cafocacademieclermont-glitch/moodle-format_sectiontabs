@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace format_grettabs\output;
+namespace format_sectiontabs\output;
 
 use format_topics\output\renderer as renderer_topics;
 
 /**
- * Renderer of the "Sections with tabs" format.
+ * Renderer of the "Tabs and section menu" format.
  *
- * @package    format_grettabs
+ * @package    format_sectiontabs
  * @copyright  2026 Eric Falcon
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,7 +34,7 @@ class renderer extends renderer_topics {
      */
     public function render_content(\renderable $widget): string {
         if ($widget instanceof courseformat\content) {
-            return $this->render_from_template('format_grettabs/local/content', $widget->export_for_template($this));
+            return $this->render_from_template('format_sectiontabs/local/content', $widget->export_for_template($this));
         }
         // Any other widget named "content": default rendering.
         return $this->render_from_template($widget->get_template_name($this), $widget->export_for_template($this));

@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Course page for the "Sections with tabs" format.
+ * Course page for the "Tabs and section menu" format.
  *
  * Included by course/view.php ($course, $displaysection, $PAGE... are defined there).
  *
- * @package    format_grettabs
+ * @package    format_sectiontabs
  * @copyright  2026 Eric Falcon
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -52,7 +52,7 @@ if (is_null($displaysection) && !empty($course->gtabshome) && !$PAGE->user_is_ed
     $displaysection = 0;
 }
 
-$renderer = $PAGE->get_renderer('format_grettabs');
+$renderer = $PAGE->get_renderer('format_sectiontabs');
 
 if (!is_null($displaysection)) {
     $format->set_sectionnum($displaysection);
