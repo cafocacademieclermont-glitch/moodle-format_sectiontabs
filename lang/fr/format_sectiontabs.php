@@ -33,21 +33,6 @@ $string['gtabsactiveborder'] = 'Couleur du soulignement de l\'onglet actif';
 $string['gtabsactiveborder_help'] = 'Couleur du trait sous l\'onglet actif, sous forme de code hexadécimal (par exemple #2b1a10). Laisser vide pour utiliser la couleur définie pour le site.';
 $string['gtabsactivecolor'] = 'Couleur de l\'onglet actif';
 $string['gtabsactivecolor_help'] = 'Couleur de fond de l\'onglet de la section affichée, sous forme de code hexadécimal (par exemple #ecb21e). Laisser vide pour utiliser la couleur définie pour le site.';
-$string['gtabscustom'] = 'Onglets personnalisés';
-$string['gtabscustom_badline'] = 'Ligne {$a} : écrivez « Nom de l\'onglet | Nom de la section ».';
-$string['gtabscustom_empty'] = 'Saisissez au moins un onglet.';
-$string['gtabscustom_help'] = 'Un onglet par ligne, sous la forme :
-
-<code>Nom de l\'onglet | Nom de la section</code>
-
-Un onglet peut regrouper plusieurs sections, séparées par des points-virgules : <code>Espace de cours | Bloc 1; Bloc 2; Bloc 3</code>. Il ouvre la première et reste en surbrillance sur chacune d\'elles.
-
-Un onglet peut aussi ouvrir une adresse web : <code>Ressources | https://...</code>
-
-Les majuscules ne comptent pas dans les noms de section. Les lignes qui commencent par # sont ignorées. Un onglet ne s\'affiche pas pour un utilisateur qui ne peut voir aucune de ses sections.';
-$string['gtabscustom_placeholder'] = 'Informations générales | Généralités
-Espace de cours | Bloc 1; Bloc 2';
-$string['gtabscustom_unknown'] = 'Ligne {$a->line} : aucune section ne s\'appelle « {$a->name} ».';
 $string['gtabshome'] = 'L\'accueil du cours n\'affiche que la section générale';
 $string['gtabshome_help'] = 'Si cette option est activée, la page d\'accueil du cours n\'affiche que la section générale, comme un format « une section par onglet ». Chaque autre section s\'affiche sur sa propre page. En mode édition, la liste complète des sections reste affichée pour pouvoir ajouter et déplacer des sections.';
 $string['gtabsleftmenu'] = 'Menu des sections à gauche';
@@ -56,7 +41,7 @@ $string['gtabsmode'] = 'Onglets';
 $string['gtabsmode_custom'] = 'Onglets personnalisés';
 $string['gtabsmode_help'] = 'Un onglet par section : la barre d\'onglets reprend toutes les sections du cours.
 
-Onglets personnalisés : vous définissez vous-même les onglets et les sections que chacun ouvre. Le menu de gauche continue de lister toutes les sections.';
+Onglets personnalisés : vous définissez vous-même les onglets et les sections que chacun ouvre, sur la page « Onglets du cours » (lien ci-dessous, ou menu « Plus » du cours). Le menu de gauche continue de lister toutes les sections.';
 $string['gtabsmode_sections'] = 'Un onglet par section';
 $string['gtabsshortnames'] = 'Noms d\'onglets courts';
 $string['gtabsshortnames_help'] = 'Si cette option est activée, seule la partie du nom de la section placée avant « : » sert de nom d\'onglet. Par exemple, « Bloc de compétence 1 : Actes essentiels » devient « Bloc de compétence 1 ». Le nom complet s\'affiche au survol de l\'onglet.';
@@ -65,6 +50,10 @@ $string['gtabssubtabs_help'] = 'Si cette option est activée, sur la page d\'une
 $string['hiddenfromstudents'] = 'caché aux étudiants';
 $string['hidefromothers'] = 'Cacher';
 $string['invalidcolour'] = 'Saisissez un code couleur hexadécimal, par exemple #ecb21e.';
+$string['managetabs'] = 'Onglets du cours';
+$string['managetabs_info'] = '{$a} : définir les onglets et les sections qu\'ils ouvrent.';
+$string['managetabs_intro'] = 'Un bloc par onglet. Donnez-lui un nom, puis choisissez les sections qu\'il ouvre, ou une adresse web. Un onglet peut regrouper plusieurs sections : il ouvre la première accessible et reste en surbrillance sur chacune d\'elles. Les blocs vides sont ignorés. Renommer une section ne casse pas les onglets.';
+$string['managetabs_newcourse'] = 'Enregistrez d\'abord le cours, puis définissez les onglets depuis la page « Onglets du cours » (menu « Plus » du cours).';
 $string['newsection'] = 'Nouvelle section';
 $string['notavailable'] = 'non disponible';
 $string['opensinnewwindow'] = 's\'ouvre dans une nouvelle fenêtre';
@@ -79,4 +68,21 @@ $string['showfromothers'] = 'Afficher';
 $string['sidemenunav'] = 'Menu des sections du cours';
 $string['subtabsnav'] = 'Sous-sections';
 $string['subtabsshowall'] = 'Tout afficher';
+$string['tabadd'] = 'Ajouter un onglet';
+$string['tabdelete'] = 'Supprimer cet onglet';
+$string['tablabel'] = 'Nom de l\'onglet';
+$string['tablabel_required'] = 'Donnez un nom à cet onglet.';
+$string['tabno'] = 'Onglet {no}';
+$string['tabposition'] = 'Position';
+$string['tabposition_help'] = 'Ordre de l\'onglet dans la barre : 1 pour le premier, 2 pour le deuxième… Des onglets avec la même position gardent l\'ordre de cette page.';
+$string['tabsections'] = 'Sections';
+$string['tabsections_help'] = 'Sections ouvertes par cet onglet. Avec plusieurs sections, l\'onglet ouvre la première accessible et reste en surbrillance sur chacune d\'elles. Un onglet ne s\'affiche pas pour un utilisateur qui ne peut voir aucune de ses sections.';
+$string['tabsections_none'] = 'Aucune section choisie';
+$string['tabsections_placeholder'] = 'Rechercher une section';
 $string['tabsnav'] = 'Sections du cours';
+$string['tabssaved'] = 'Les onglets du cours ont été enregistrés.';
+$string['tabtarget_both'] = 'Choisissez soit des sections, soit une adresse web, pas les deux.';
+$string['tabtarget_required'] = 'Choisissez au moins une section, ou saisissez une adresse web.';
+$string['taburl'] = 'Ou adresse web';
+$string['taburl_help'] = 'À la place de sections, l\'onglet peut ouvrir une adresse web (commençant par http:// ou https://). Elle s\'ouvre dans une nouvelle fenêtre.';
+$string['taburl_invalid'] = 'Saisissez une adresse web commençant par http:// ou https://.';

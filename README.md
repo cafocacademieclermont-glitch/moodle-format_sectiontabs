@@ -52,22 +52,20 @@ Les sections et les activités sont conservées lors du changement de format.
 
 ### Onglets personnalisés
 
-Choisir **Onglets personnalisés** dans l'option *Onglets*, puis saisir un onglet par ligne :
+1. Dans *Paramètres du cours → Format de cours → Onglets*, choisir **Onglets personnalisés**, puis suivre le lien
+   **Onglets du cours** (aussi accessible depuis le menu **Plus** du cours).
+2. La page propose un bloc par onglet, pré-rempli avec un onglet par section. Pour chaque onglet :
+   - **Nom de l'onglet** ;
+   - **Sections** : une ou plusieurs sections, choisies dans une liste. Avec plusieurs sections, l'onglet ouvre la
+     première accessible et reste en surbrillance sur chacune d'elles ;
+   - **Ou adresse web** (au lieu de sections), ouverte dans une nouvelle fenêtre ;
+   - **Position** dans la barre (1, 2, 3…).
+3. **Supprimer cet onglet** / **Ajouter un onglet**, puis **Enregistrer**.
 
-```
-Informations générales | Généralités
-Espace de cours | Bloc de compétence 1 : Actes essentiels; Bloc de compétence 2 : Actes coordonnés
-Espace de certification | Evaluations et suivi des compétences
-Ressources | https://exemple.fr/ressources
-```
-
-- À gauche du `|` : le nom de l'onglet. À droite : le **nom de la section** à ouvrir (les majuscules et les espaces en trop ne comptent pas).
-- Un onglet peut regrouper plusieurs sections, séparées par des **points-virgules** : il ouvre la première accessible et reste en surbrillance sur chacune d'elles.
-- Un onglet peut aussi ouvrir une adresse web (dans un nouvel onglet du navigateur).
-- Les lignes qui commencent par `#` sont ignorées.
-- À l'enregistrement, Moodle signale les lignes mal écrites et les noms de section introuvables. **Si une section est renommée, il faut mettre à jour la liste.**
-- Un onglet n'apparaît pas pour un utilisateur qui ne peut voir aucune de ses sections.
-- Le menu de gauche continue de lister toutes les sections.
+Les onglets désignent les sections par leur identifiant : renommer ou déplacer une section ne casse pas les onglets.
+Ils sont conservés lors d'une sauvegarde / restauration, d'une duplication ou d'une importation du cours.
+Un onglet n'apparaît pas pour un utilisateur qui ne peut voir aucune de ses sections. Le menu de gauche liste toujours
+toutes les sections.
 
 ## Personnalisation
 

@@ -33,21 +33,6 @@ $string['gtabsactiveborder'] = 'Active tab underline colour';
 $string['gtabsactiveborder_help'] = 'Colour of the line under the active tab, as a hexadecimal code (for example #2b1a10). Leave empty to use the site colour.';
 $string['gtabsactivecolor'] = 'Active tab colour';
 $string['gtabsactivecolor_help'] = 'Background colour of the tab of the section being displayed, as a hexadecimal code (for example #ecb21e). Leave empty to use the site colour.';
-$string['gtabscustom'] = 'Custom tabs';
-$string['gtabscustom_badline'] = 'Line {$a}: write "Tab name | Section name".';
-$string['gtabscustom_empty'] = 'Enter at least one tab.';
-$string['gtabscustom_help'] = 'One tab per line, in the form:
-
-<code>Tab name | Section name</code>
-
-A tab can group several sections, separated by semicolons: <code>Course area | Block 1; Block 2; Block 3</code>. It opens the first one and stays highlighted on each of them.
-
-A tab can also open a web address: <code>Resources | https://...</code>
-
-Section names are not case sensitive. Lines starting with # are ignored. A tab is not displayed to a user who cannot see any of its sections.';
-$string['gtabscustom_placeholder'] = 'General information | General
-Course area | Block 1; Block 2';
-$string['gtabscustom_unknown'] = 'Line {$a->line}: no section is named "{$a->name}".';
 $string['gtabshome'] = 'Course home shows only the general section';
 $string['gtabshome_help'] = 'If enabled, the course home page only displays the general section, like a "one section per tab" format. Each other section is displayed on its own page. In editing mode the full list of sections is still displayed so that sections can be added and moved.';
 $string['gtabsleftmenu'] = 'Section menu on the left';
@@ -56,7 +41,7 @@ $string['gtabsmode'] = 'Tabs';
 $string['gtabsmode_custom'] = 'Custom tabs';
 $string['gtabsmode_help'] = 'One tab per section: the tab bar lists every section of the course.
 
-Custom tabs: you define the tabs yourself, and which sections each of them opens. The section menu on the left still lists every section.';
+Custom tabs: you define the tabs yourself, and which sections each of them opens, on the "Course tabs" page (link below, or "More" menu of the course). The section menu on the left still lists every section.';
 $string['gtabsmode_sections'] = 'One tab per section';
 $string['gtabsshortnames'] = 'Short tab names';
 $string['gtabsshortnames_help'] = 'If enabled, only the part of the section name before " : " is used as tab name. For example "Block 1 : Essential acts" becomes "Block 1". The full name is displayed when hovering the tab.';
@@ -65,6 +50,10 @@ $string['gtabssubtabs_help'] = 'If enabled, on a section page the subsections ar
 $string['hiddenfromstudents'] = 'hidden from students';
 $string['hidefromothers'] = 'Hide';
 $string['invalidcolour'] = 'Enter a hexadecimal colour code, for example #ecb21e.';
+$string['managetabs'] = 'Course tabs';
+$string['managetabs_info'] = '{$a}: define the tabs and the sections they open.';
+$string['managetabs_intro'] = 'One block per tab. Give it a name, then choose the sections it opens, or a web address. A tab can group several sections: it opens the first one the user can access and stays highlighted on each of them. Empty blocks are ignored. Renaming a section does not break the tabs.';
+$string['managetabs_newcourse'] = 'Save the course first, then define the tabs from the "Course tabs" page ("More" menu of the course).';
 $string['newsection'] = 'New section';
 $string['notavailable'] = 'not available';
 $string['opensinnewwindow'] = 'opens in a new window';
@@ -79,4 +68,21 @@ $string['showfromothers'] = 'Show';
 $string['sidemenunav'] = 'Course sections menu';
 $string['subtabsnav'] = 'Subsections';
 $string['subtabsshowall'] = 'Show all';
+$string['tabadd'] = 'Add a tab';
+$string['tabdelete'] = 'Delete this tab';
+$string['tablabel'] = 'Tab name';
+$string['tablabel_required'] = 'Give this tab a name.';
+$string['tabno'] = 'Tab {no}';
+$string['tabposition'] = 'Position';
+$string['tabposition_help'] = 'Order of the tab in the tab bar: 1 for the first one, 2 for the second one... Tabs with the same position keep the order of this page.';
+$string['tabsections'] = 'Sections';
+$string['tabsections_help'] = 'Sections opened by this tab. With several sections, the tab opens the first one the user can access and stays highlighted on each of them. A tab is not displayed to a user who cannot see any of its sections.';
+$string['tabsections_none'] = 'No section selected';
+$string['tabsections_placeholder'] = 'Search for a section';
 $string['tabsnav'] = 'Course sections';
+$string['tabssaved'] = 'The course tabs have been saved.';
+$string['tabtarget_both'] = 'Choose either sections or a web address, not both.';
+$string['tabtarget_required'] = 'Choose at least one section, or enter a web address.';
+$string['taburl'] = 'Or web address';
+$string['taburl_help'] = 'Instead of sections, the tab can open a web address (starting with http:// or https://). It opens in a new window.';
+$string['taburl_invalid'] = 'Enter a web address starting with http:// or https://.';

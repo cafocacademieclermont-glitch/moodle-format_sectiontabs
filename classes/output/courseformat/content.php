@@ -108,18 +108,10 @@ class content extends content_topics {
         $current = (int)($format->get_sectionnum() ?? 0);
         $shortnames = !empty($course->gtabsshortnames);
 
-        // All the sections the user can see, in course order, by section number.
+        // All the sections the user can see, in course order, by section id.
         $sections = [];
-        // Section numbers by normalised name, for the custom tabs (first section wins).
-        $bynames = [];
         foreach ($modinfo->get_listed_section_info_all() as $section) {
             $fullname = $format->get_section_name($section);
-            foreach ([$fullname, (string)$section->name] as $name) {
-                $key = \format_sectiontabs::normalise_name($name);
-                if ($key !== '' && !isset($bynames[$key])) {
-                    $bynames[$key] = (int)$section->section;
-                }
-            }
             if (!$format->is_section_visible($section)) {
                 continue;
             }
@@ -136,7 +128,7 @@ class content extends content_topics {
                     $name = $parts[0];
                 }
             }
-            $sections[(int)$section->section] = [
+            $sections[(int)$section->id] = [
                 'name' => $name,
                 'fullname' => $fullname,
                 'title' => html_entity_decode(strip_tags($fullname), ENT_QUOTES, 'UTF-8'),
@@ -147,10 +139,12 @@ class content extends content_topics {
             ];
         }
 
-        if ((int)($course->gtabsmode ?? 0) === \format_sectiontabs::TABS_CUSTOM) {
-            $tabs = $this->export_custom_tabs($sections, $bynames, $current);
+        $customtabs = $format->get_custom_tabs();
+        if ((int)($course->gtabsmode ?? 0) === \format_sectiontabs::TABS_CUSTOM && $customtabs) {
+            $tabs = $this->export_custom_tabs($customtabs, $sections);
             $hastabs = !empty($tabs);
         } else {
+            // One tab per section (also when the custom tabs are not defined yet).
             $tabs = array_values($sections);
             $hastabs = count($tabs) >= 2;
         }
@@ -173,18 +167,14 @@ class content extends content_topics {
     /**
      * Build the tabs defined by the teacher.
      *
-     * @param array $sections visible sections data, by section number
-     * @param array $bynames section numbers by normalised name
-     * @param int $current section displayed on this page
+     * @param array $customtabs the custom tabs definition
+     * @param array $sections visible sections data, by section id
      * @return array
      */
-    protected function export_custom_tabs(array $sections, array $bynames, int $current): array {
-        $course = $this->format->get_course();
+    protected function export_custom_tabs(array $customtabs, array $sections): array {
         $context = $this->format->get_context();
-        $parsed = \format_sectiontabs::parse_custom_tabs((string)($course->gtabscustom ?? ''));
-
         $tabs = [];
-        foreach ($parsed['tabs'] as $definition) {
+        foreach ($customtabs as $definition) {
             $label = format_string($definition['label'], true, ['context' => $context]);
             $tab = [
                 'name' => $label,
@@ -194,18 +184,17 @@ class content extends content_topics {
                 'hidden' => false,
                 'unavailable' => false,
             ];
-            if ($definition['url'] !== null) {
+            if ($definition['url'] !== '') {
                 $tab['url'] = $definition['url'];
                 $tab['external'] = true;
                 $tabs[] = $tab;
                 continue;
             }
-            // Sections targeted by the tab that this user can see.
+            // Sections targeted by the tab that this user can see (deleted sections are ignored).
             $targets = [];
-            foreach ($definition['sections'] as $name) {
-                $num = $bynames[\format_sectiontabs::normalise_name($name)] ?? null;
-                if ($num !== null && isset($sections[$num])) {
-                    $targets[$num] = $sections[$num];
+            foreach ($definition['sectionids'] as $sectionid) {
+                if (isset($sections[$sectionid])) {
+                    $targets[$sectionid] = $sections[$sectionid];
                 }
             }
             if (!$targets) {
@@ -215,7 +204,7 @@ class content extends content_topics {
             $available = array_filter($targets, fn($target) => !$target['unavailable']);
             $first = reset($available) ?: reset($targets);
             $tab['url'] = $first['url'];
-            $tab['active'] = isset($targets[$current]);
+            $tab['active'] = (bool)array_filter($targets, fn($target) => $target['active']);
             $tab['unavailable'] = empty($available);
             $tab['hidden'] = !array_filter($targets, fn($target) => !$target['hidden']);
             $tabs[] = $tab;

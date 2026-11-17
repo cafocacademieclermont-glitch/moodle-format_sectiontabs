@@ -85,6 +85,8 @@ class format_sectiontabs extends format_topics {
         ];
 
         if ($foreditform) {
+            // The custom tabs are edited on their own page (tabs.php), not in the course form.
+            unset($options['gtabscustom']);
             $options['gtabsmode'] += [
                 'label' => new lang_string('gtabsmode', 'format_sectiontabs'),
                 'help' => 'gtabsmode',
@@ -95,16 +97,6 @@ class format_sectiontabs extends format_topics {
                         self::TABS_SECTIONS => new lang_string('gtabsmode_sections', 'format_sectiontabs'),
                         self::TABS_CUSTOM => new lang_string('gtabsmode_custom', 'format_sectiontabs'),
                     ],
-                ],
-            ];
-            $options['gtabscustom'] += [
-                'label' => new lang_string('gtabscustom', 'format_sectiontabs'),
-                'help' => 'gtabscustom',
-                'help_component' => 'format_sectiontabs',
-                'element_type' => 'textarea',
-                'element_attributes' => [
-                    ['rows' => 8, 'cols' => 60,
-                     'placeholder' => get_string('gtabscustom_placeholder', 'format_sectiontabs')],
                 ],
             ];
             $options['gtabshome'] += [
@@ -147,6 +139,21 @@ class format_sectiontabs extends format_topics {
     }
 
     /**
+     * Keep the custom tabs option, which is not in the course form but is saved by the tabs page.
+     *
+     * @param array $rawdata
+     * @param int|null $sectionid
+     * @return array
+     */
+    protected function validate_format_options(array $rawdata, ?int $sectionid = null): array {
+        $data = parent::validate_format_options($rawdata, $sectionid);
+        if (!$sectionid && array_key_exists('gtabscustom', $rawdata)) {
+            $data['gtabscustom'] = clean_param((string)$rawdata['gtabscustom'], PARAM_TEXT);
+        }
+        return $data;
+    }
+
+    /**
      * Add the course format options to the course form, and show the custom tabs field only when needed.
      *
      * @param MoodleQuickForm $mform
@@ -155,14 +162,29 @@ class format_sectiontabs extends format_topics {
      */
     public function create_edit_form_elements(&$mform, $forsection = false) {
         $elements = parent::create_edit_form_elements($mform, $forsection);
-        if (!$forsection && $mform->elementExists('gtabscustom')) {
-            $mform->hideIf('gtabscustom', 'gtabsmode', 'neq', self::TABS_CUSTOM);
+        if (!$forsection && $mform->elementExists('gtabsmode')) {
+            if ($this->courseid && $this->courseid != SITEID) {
+                $link = html_writer::link(
+                    new moodle_url('/course/format/sectiontabs/tabs.php', ['id' => $this->courseid]),
+                    get_string('managetabs', 'format_sectiontabs')
+                );
+                $text = get_string('managetabs_info', 'format_sectiontabs', $link);
+            } else {
+                $text = get_string('managetabs_newcourse', 'format_sectiontabs');
+            }
+            $element = $mform->createElement('static', 'gtabscustomlink', '', $text);
+            if ($mform->elementExists('gtabshome')) {
+                $mform->insertElementBefore($element, 'gtabshome');
+            } else {
+                $mform->addElement($element);
+            }
+            $mform->hideIf('gtabscustomlink', 'gtabsmode', 'neq', self::TABS_CUSTOM);
         }
         return $elements;
     }
 
     /**
-     * Check the tab colours and the custom tabs definition.
+     * Check the tab colours.
      *
      * @param array $data
      * @param array $files
@@ -171,41 +193,6 @@ class format_sectiontabs extends format_topics {
      */
     public function edit_form_validation($data, $files, $errors) {
         $formerrors = parent::edit_form_validation($data, $files, $errors);
-        if ((int)($data['gtabsmode'] ?? self::TABS_SECTIONS) === self::TABS_CUSTOM) {
-            $parsed = self::parse_custom_tabs($data['gtabscustom'] ?? '');
-            $messages = [];
-            foreach ($parsed['errors'] as $linenum) {
-                $messages[] = get_string('gtabscustom_badline', 'format_sectiontabs', $linenum);
-            }
-            if (empty($parsed['tabs']) && empty($parsed['errors'])) {
-                $messages[] = get_string('gtabscustom_empty', 'format_sectiontabs');
-            }
-            // Check the section names against the sections of the course (when it already exists).
-            // The format instance used for validation is not always tied to the course.
-            $courseid = $this->courseid ?: (int)($data['id'] ?? 0);
-            if ($courseid && $courseid != SITEID) {
-                $known = [];
-                $courseformat = course_get_format($courseid);
-                foreach (get_fast_modinfo($courseid)->get_listed_section_info_all() as $section) {
-                    $known[self::normalise_name($courseformat->get_section_name($section))] = true;
-                    $known[self::normalise_name((string)$section->name)] = true;
-                }
-                foreach ($parsed['tabs'] as $tab) {
-                    foreach ($tab['sections'] as $name) {
-                        if (empty($known[self::normalise_name($name)])) {
-                            $messages[] = get_string(
-                                'gtabscustom_unknown',
-                                'format_sectiontabs',
-                                ['line' => $tab['line'], 'name' => s($name)]
-                            );
-                        }
-                    }
-                }
-            }
-            if ($messages) {
-                $formerrors['gtabscustom'] = implode('<br>', $messages);
-            }
-        }
         foreach (['gtabsactivecolor', 'gtabsactiveborder'] as $name) {
             $value = trim($data[$name] ?? '');
             if ($value !== '' && self::clean_colour($value) === null) {
@@ -216,59 +203,48 @@ class format_sectiontabs extends format_topics {
     }
 
     /**
-     * Parse the custom tabs definition.
+     * The custom tabs of the course.
      *
-     * One tab per line: "Tab name | Section name; Other section name" or "Tab name | https://...".
-     * Empty lines and lines starting with # are ignored.
-     *
-     * @param string $text
-     * @return array ['tabs' => [['line', 'label', 'sections' => string[], 'url' => ?string]], 'errors' => int[] line numbers]
+     * @return array list of ['label' => string, 'sectionids' => int[], 'url' => string]
      */
-    public static function parse_custom_tabs(string $text): array {
-        $tabs = [];
-        $errors = [];
-        foreach (preg_split('/\R/u', $text) as $index => $line) {
-            $line = trim($line);
-            if ($line === '' || str_starts_with($line, '#')) {
-                continue;
-            }
-            $parts = explode('|', $line, 2);
-            $label = trim($parts[0]);
-            $target = trim($parts[1] ?? '');
-            if ($label === '' || $target === '') {
-                $errors[] = $index + 1;
-                continue;
-            }
-            $tab = ['line' => $index + 1, 'label' => $label, 'sections' => [], 'url' => null];
-            if (preg_match('~^https?://~i', $target)) {
-                $url = clean_param($target, PARAM_URL);
-                if ($url === '') {
-                    $errors[] = $index + 1;
-                    continue;
-                }
-                $tab['url'] = $url;
-            } else {
-                $tab['sections'] = array_values(array_filter(array_map('trim', explode(';', $target)), 'strlen'));
-                if (!$tab['sections']) {
-                    $errors[] = $index + 1;
-                    continue;
-                }
-            }
-            $tabs[] = $tab;
+    public function get_custom_tabs(): array {
+        $data = json_decode((string)($this->get_course()->gtabscustom ?? ''), true);
+        if (!is_array($data)) {
+            return [];
         }
-        return ['tabs' => $tabs, 'errors' => $errors];
+        $tabs = [];
+        foreach ($data as $tab) {
+            if (!is_array($tab) || trim((string)($tab['label'] ?? '')) === '') {
+                continue;
+            }
+            $url = clean_param((string)($tab['url'] ?? ''), PARAM_URL);
+            $tabs[] = [
+                'label' => trim((string)$tab['label']),
+                'sectionids' => array_values(array_unique(array_filter(array_map('intval', (array)($tab['sectionids'] ?? []))))),
+                'url' => preg_match('~^https?://~i', $url) ? $url : '',
+            ];
+        }
+        return $tabs;
     }
 
     /**
-     * Normalise a section name for comparison: no tags, no case, single spaces.
+     * Save the custom tabs of the course.
      *
-     * @param string $name
-     * @return string
+     * @param array $tabs list of ['label' => string, 'sectionids' => int[], 'url' => string]
      */
-    public static function normalise_name(string $name): string {
-        $name = html_entity_decode(strip_tags($name), ENT_QUOTES, 'UTF-8');
-        $name = preg_replace('/\s+/u', ' ', str_replace("\u{00A0}", ' ', $name));
-        return core_text::strtolower(trim($name));
+    public function set_custom_tabs(array $tabs): void {
+        $clean = [];
+        foreach ($tabs as $tab) {
+            $clean[] = [
+                'label' => trim((string)$tab['label']),
+                'sectionids' => array_values(array_map('intval', $tab['sectionids'] ?? [])),
+                'url' => (string)($tab['url'] ?? ''),
+            ];
+        }
+        // JSON_HEX_TAG keeps the "<" and ">" of the labels through the PARAM_TEXT cleaning.
+        $json = json_encode($clean, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
+        $this->update_course_format_options(['gtabscustom' => $json]);
+        rebuild_course_cache($this->courseid, true);
     }
 
     /**
@@ -354,6 +330,27 @@ class format_sectiontabs extends format_topics {
         }
         return new moodle_url('/course/section.php', ['id' => $section->id]);
     }
+}
+
+/**
+ * Add the "Course tabs" page to the course administration ("More" menu).
+ *
+ * @param navigation_node $navigation
+ * @param stdClass $course
+ * @param context_course $context
+ */
+function format_sectiontabs_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context) {
+    if ($course->format !== 'sectiontabs' || !has_capability('moodle/course:update', $context)) {
+        return;
+    }
+    $navigation->add(
+        get_string('managetabs', 'format_sectiontabs'),
+        new moodle_url('/course/format/sectiontabs/tabs.php', ['id' => $course->id]),
+        navigation_node::TYPE_SETTING,
+        null,
+        'format_sectiontabs_tabs',
+        new pix_icon('i/settings', '')
+    );
 }
 
 /**
