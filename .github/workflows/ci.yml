@@ -1,0 +1,46 @@
+# Contrôles du plugin : syntaxe PHP, règles de code Moodle (moodle-cs), cohérence des fichiers de langue.
+# Lancé à chaque push et pull request, et appelé par le workflow de release avant de publier.
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Contrôles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer
+          coverage: none
+
+      - name: Syntaxe PHP
+        run: |
+          find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l > /dev/null
+
+      - name: Installer moodle-cs
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir moodle-cs && cd moodle-cs
+          composer init --no-interaction --name=ci/moodle-cs --quiet
+          composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer require --no-interaction --quiet moodlehq/moodle-cs
+          vendor/bin/phpcs -i
+
+      - name: Règles de code Moodle (moodle-cs)
+        run: ${{ runner.temp }}/moodle-cs/vendor/bin/phpcs --standard=moodle --extensions=php -s .
+
+      - name: Version et fichiers de langue
+        run: php .github/scripts/check.php

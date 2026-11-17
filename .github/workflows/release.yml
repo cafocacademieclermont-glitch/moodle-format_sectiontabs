@@ -1,0 +1,115 @@
+# Publication d'une version : contrôles, zip installable, release GitHub avec les notes de CHANGES.md.
+#
+# Deux façons de lancer une release :
+# - Actions > Release > Run workflow : le numéro est lu dans version.php ($plugin->release),
+#   l'étiquette vX.Y est créée sur le commit choisi ;
+# - pousser une étiquette vX.Y : elle doit correspondre à $plugin->release de version.php.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    name: Contrôles
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    name: Publier la release
+    needs: checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Installer PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Numéro de version et étiquette
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          read -r release maturity < <(php .github/scripts/check.php --print-release)
+          tag="v$release"
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            if [ "$GITHUB_REF_NAME" != "$tag" ]; then
+              echo "::error::L'étiquette $GITHUB_REF_NAME ne correspond pas à version.php (release '$release', étiquette attendue $tag)."
+              exit 1
+            fi
+          elif git ls-remote --exit-code --tags origin "refs/tags/$tag" > /dev/null; then
+            echo "::error::La version $release est déjà publiée ($tag). Augmentez \$plugin->release et \$plugin->version dans version.php."
+            exit 1
+          fi
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "::error::Une release $tag existe déjà."
+            exit 1
+          fi
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "maturity=$maturity" >> "$GITHUB_OUTPUT"
+          echo "Release $release ($maturity), étiquette $tag"
+
+      - name: Fabriquer le zip installable
+        id: zip
+        run: |
+          zip="format_sectiontabs_${{ steps.version.outputs.release }}.zip"
+          # Le dossier racine du zip doit s'appeler comme le plugin : sectiontabs/.
+          # Les fichiers marqués export-ignore dans .gitattributes (.github...) sont exclus.
+          git archive --format=zip --prefix=sectiontabs/ -o "$zip" HEAD
+          unzip -l "$zip"
+          unzip -l "$zip" | grep -q ' sectiontabs/version.php$'
+          if unzip -l "$zip" | grep -q '\.github'; then
+            echo "::error::Le zip contient le dossier .github."
+            exit 1
+          fi
+          echo "file=$zip" >> "$GITHUB_OUTPUT"
+
+      - name: Notes de version
+        run: |
+          release="${{ steps.version.outputs.release }}"
+          # Section « ## <release> » de CHANGES.md, jusqu'à la section suivante.
+          awk -v r="$release" '
+            /^## / { insection = ($2 == r) ; next }
+            insection { print }
+          ' CHANGES.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "Version $release." > notes.md
+          fi
+          {
+            echo
+            echo "### Installation"
+            echo
+            echo "Décompresser \`${{ steps.zip.outputs.file }}\` dans \`public/course/format/\` (le dossier doit s'appeler \`sectiontabs\`),"
+            echo "ou l'installer depuis *Administration du site → Plugins → Installer des plugins*, puis ouvrir"
+            echo "*Administration du site → Notifications*."
+          } >> notes.md
+          cat notes.md
+
+      - name: Publier la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          flags=()
+          if [ "${{ steps.version.outputs.maturity }}" != "stable" ]; then
+            flags+=(--prerelease)
+          fi
+          gh release create "${{ steps.version.outputs.tag }}" "${{ steps.zip.outputs.file }}" \
+            --target "$GITHUB_SHA" \
+            --title "Version ${{ steps.version.outputs.release }}" \
+            --notes-file notes.md \
+            "${flags[@]}"

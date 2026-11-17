@@ -103,6 +103,23 @@ Vérifié avec axe-core (WCAG 2.1 / 2.2 niveau AA), au clavier et avec les attri
 - Aucune section cachée ou restreinte (« masquer complètement ») n'apparaît pour un utilisateur qui ne peut pas la voir.
 - Le plugin n'enregistre aucune donnée personnelle et n'ajoute aucun service web.
 
+## Publier une nouvelle version (mainteneur)
+
+L'intégration continue (GitHub Actions) contrôle chaque push : syntaxe PHP, règles de code Moodle (moodle-cs),
+`version.php` et fichiers de langue (mêmes chaînes en anglais et en français, dans l'ordre alphabétique).
+
+Pour publier une version :
+
+1. Dans `version.php`, augmenter `$plugin->version` (AAAAMMJJXX) et `$plugin->release` (par exemple `1.1`) ;
+   `$plugin->maturity = MATURITY_STABLE` pour une version stable (sinon la release est marquée « pré-version »).
+2. Ajouter une section `## 1.1` en tête de `CHANGES.md` : elle sert de notes de version.
+3. Pousser sur `main`, puis dans GitHub : **Actions → Release → Run workflow**.
+   (Autre possibilité : pousser une étiquette `v1.1`, qui doit correspondre à `$plugin->release`.)
+
+Le workflow relance les contrôles, crée l'étiquette `v1.1`, fabrique `format_sectiontabs_1.1.zip` (dossier
+`sectiontabs/`, sans le dossier `.github`) et publie la release avec ce zip et les notes de `CHANGES.md`.
+Il refuse de republier une version existante.
+
 ## Licence
 
 GNU GPL v3 ou ultérieure.
