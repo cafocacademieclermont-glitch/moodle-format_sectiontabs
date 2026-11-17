@@ -21,7 +21,7 @@
 
     Example context (json):
     {
-        "tabs": [
+        "sections": [
             {"fullname": "Accueil et informations pratiques", "title": "Accueil et informations pratiques", "url": "#", "active": true},
             {"fullname": "Bloc 1 : Actes essentiels", "title": "Bloc 1 : Actes essentiels", "url": "#", "hidden": true},
             {"fullname": "Bloc 2", "title": "Bloc 2", "url": "#", "unavailable": true}
@@ -30,7 +30,7 @@
 }}
 <nav class="gtabs-side" aria-label="{{#str}} sidemenunav, format_grettabs {{/str}}">
     <ul class="gtabs-side-list">
-        {{#tabs}}
+        {{#sections}}
         <li class="gtabs-side-item">
             {{#unavailable}}
             <span class="gtabs-side-link gtabs-unavailable{{#active}} gtabs-side-active{{/active}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{fullname}}}</span>
@@ -39,6 +39,6 @@
             <a class="gtabs-side-link{{#active}} gtabs-side-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}" href="{{{url}}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{fullname}}}</a>
             {{/unavailable}}
         </li>
-        {{/tabs}}
+        {{/sections}}
     </ul>
 </nav>

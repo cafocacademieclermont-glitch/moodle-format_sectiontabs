@@ -23,6 +23,10 @@
     {
         "gtabs": {
             "leftmenu": true,
+            "hastabs": true,
+            "sections": [
+                {"fullname": "Accueil", "title": "Accueil", "url": "#", "active": true}
+            ],
             "style": "--gtabs-active:#ecb21e;--gtabs-active-border:#2b1a10;",
             "tabs": [
                 {"name": "Accueil", "fullname": "Accueil", "title": "Accueil", "url": "#", "active": true},
@@ -36,9 +40,11 @@
         "pagesectionid": "null"
     }
 }}
-{{#gtabs}}
-    {{> format_grettabs/local/tabs }}
-{{/gtabs}}
+{{#gtabs.hastabs}}
+    {{#gtabs}}
+        {{> format_grettabs/local/tabs }}
+    {{/gtabs}}
+{{/gtabs.hastabs}}
 {{#gtabs.leftmenu}}
 <div class="gtabs-layout" style="{{gtabs.style}}">
     {{#gtabs}}

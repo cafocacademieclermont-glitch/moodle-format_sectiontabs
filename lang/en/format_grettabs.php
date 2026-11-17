@@ -33,10 +33,31 @@ $string['gtabsactiveborder'] = 'Active tab underline colour';
 $string['gtabsactiveborder_help'] = 'Colour of the line under the active tab, as a hexadecimal code (for example #2b1a10). Leave empty to use the site colour.';
 $string['gtabsactivecolor'] = 'Active tab colour';
 $string['gtabsactivecolor_help'] = 'Background colour of the tab of the section being displayed, as a hexadecimal code (for example #ecb21e). Leave empty to use the site colour.';
+$string['gtabscustom'] = 'Custom tabs';
+$string['gtabscustom_badline'] = 'Line {$a}: write "Tab name | Section name".';
+$string['gtabscustom_empty'] = 'Enter at least one tab.';
+$string['gtabscustom_help'] = 'One tab per line, in the form:
+
+<code>Tab name | Section name</code>
+
+A tab can group several sections, separated by semicolons: <code>Course area | Block 1; Block 2; Block 3</code>. It opens the first one and stays highlighted on each of them.
+
+A tab can also open a web address: <code>Resources | https://...</code>
+
+Section names are not case sensitive. Lines starting with # are ignored. A tab is not displayed to a user who cannot see any of its sections.';
+$string['gtabscustom_placeholder'] = 'General information | General
+Course area | Block 1; Block 2';
+$string['gtabscustom_unknown'] = 'Line {$a->line}: no section is named "{$a->name}".';
 $string['gtabshome'] = 'Course home shows only the general section';
 $string['gtabshome_help'] = 'If enabled, the course home page only displays the general section, like a "one section per tab" format. Each other section is displayed on its own page. In editing mode the full list of sections is still displayed so that sections can be added and moved.';
 $string['gtabsleftmenu'] = 'Section menu on the left';
 $string['gtabsleftmenu_help'] = 'If enabled, the list of the course sections is displayed on the left of the course content, in addition to the tab bar. It is hidden on small screens, where the tab bar remains.';
+$string['gtabsmode'] = 'Tabs';
+$string['gtabsmode_custom'] = 'Custom tabs';
+$string['gtabsmode_help'] = 'One tab per section: the tab bar lists every section of the course.
+
+Custom tabs: you define the tabs yourself, and which sections each of them opens. The section menu on the left still lists every section.';
+$string['gtabsmode_sections'] = 'One tab per section';
 $string['gtabsshortnames'] = 'Short tab names';
 $string['gtabsshortnames_help'] = 'If enabled, only the part of the section name before " : " is used as tab name. For example "Block 1 : Essential acts" becomes "Block 1". The full name is displayed when hovering the tab.';
 $string['gtabssubtabs'] = 'Subsections as tabs';

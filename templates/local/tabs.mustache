@@ -37,7 +37,7 @@
             <span class="gtabs-tab gtabs-unavailable{{#active}} gtabs-active{{/active}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{name}}}</span>
             {{/unavailable}}
             {{^unavailable}}
-            <a class="gtabs-tab{{#active}} gtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}" href="{{{url}}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{name}}}</a>
+            <a class="gtabs-tab{{#active}} gtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}" href="{{url}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}{{#external}} target="_blank" rel="noopener"{{/external}}>{{{name}}}</a>
             {{/unavailable}}
         </li>
         {{/tabs}}

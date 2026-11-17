@@ -37,6 +37,12 @@ use core\lang_string;
  */
 class format_grettabs extends format_topics {
 
+    /** @var int One tab per section. */
+    public const TABS_SECTIONS = 0;
+
+    /** @var int Tabs defined by the teacher. */
+    public const TABS_CUSTOM = 1;
+
     /**
      * Course format options: the topics ones plus the tab bar options.
      *
@@ -46,6 +52,14 @@ class format_grettabs extends format_topics {
     public function course_format_options($foreditform = false) {
         $options = parent::course_format_options($foreditform);
 
+        $options['gtabsmode'] = [
+            'default' => self::TABS_SECTIONS,
+            'type' => PARAM_INT,
+        ];
+        $options['gtabscustom'] = [
+            'default' => '',
+            'type' => PARAM_TEXT,
+        ];
         $options['gtabshome'] = [
             'default' => 1,
             'type' => PARAM_BOOL,
@@ -72,6 +86,28 @@ class format_grettabs extends format_topics {
         ];
 
         if ($foreditform) {
+            $options['gtabsmode'] += [
+                'label' => new lang_string('gtabsmode', 'format_grettabs'),
+                'help' => 'gtabsmode',
+                'help_component' => 'format_grettabs',
+                'element_type' => 'select',
+                'element_attributes' => [
+                    [
+                        self::TABS_SECTIONS => new lang_string('gtabsmode_sections', 'format_grettabs'),
+                        self::TABS_CUSTOM => new lang_string('gtabsmode_custom', 'format_grettabs'),
+                    ],
+                ],
+            ];
+            $options['gtabscustom'] += [
+                'label' => new lang_string('gtabscustom', 'format_grettabs'),
+                'help' => 'gtabscustom',
+                'help_component' => 'format_grettabs',
+                'element_type' => 'textarea',
+                'element_attributes' => [
+                    ['rows' => 8, 'cols' => 60,
+                     'placeholder' => get_string('gtabscustom_placeholder', 'format_grettabs')],
+                ],
+            ];
             $options['gtabshome'] += [
                 'label' => new lang_string('gtabshome', 'format_grettabs'),
                 'help' => 'gtabshome',
@@ -119,8 +155,48 @@ class format_grettabs extends format_topics {
      * @param array $errors
      * @return array
      */
+    public function create_edit_form_elements(&$mform, $forsection = false) {
+        $elements = parent::create_edit_form_elements($mform, $forsection);
+        if (!$forsection && $mform->elementExists('gtabscustom')) {
+            $mform->hideIf('gtabscustom', 'gtabsmode', 'neq', self::TABS_CUSTOM);
+        }
+        return $elements;
+    }
+
     public function edit_form_validation($data, $files, $errors) {
         $formerrors = parent::edit_form_validation($data, $files, $errors);
+        if ((int)($data['gtabsmode'] ?? self::TABS_SECTIONS) === self::TABS_CUSTOM) {
+            $parsed = self::parse_custom_tabs($data['gtabscustom'] ?? '');
+            $messages = [];
+            foreach ($parsed['errors'] as $linenum) {
+                $messages[] = get_string('gtabscustom_badline', 'format_grettabs', $linenum);
+            }
+            if (empty($parsed['tabs']) && empty($parsed['errors'])) {
+                $messages[] = get_string('gtabscustom_empty', 'format_grettabs');
+            }
+            // Check the section names against the sections of the course (when it already exists).
+            // The format instance used for validation is not always tied to the course.
+            $courseid = $this->courseid ?: (int)($data['id'] ?? 0);
+            if ($courseid && $courseid != SITEID) {
+                $known = [];
+                $courseformat = course_get_format($courseid);
+                foreach (get_fast_modinfo($courseid)->get_listed_section_info_all() as $section) {
+                    $known[self::normalise_name($courseformat->get_section_name($section))] = true;
+                    $known[self::normalise_name((string)$section->name)] = true;
+                }
+                foreach ($parsed['tabs'] as $tab) {
+                    foreach ($tab['sections'] as $name) {
+                        if (empty($known[self::normalise_name($name)])) {
+                            $messages[] = get_string('gtabscustom_unknown', 'format_grettabs',
+                                ['line' => $tab['line'], 'name' => s($name)]);
+                        }
+                    }
+                }
+            }
+            if ($messages) {
+                $formerrors['gtabscustom'] = implode('<br>', $messages);
+            }
+        }
         foreach (['gtabsactivecolor', 'gtabsactiveborder'] as $name) {
             $value = trim($data[$name] ?? '');
             if ($value !== '' && self::clean_colour($value) === null) {
@@ -128,6 +204,62 @@ class format_grettabs extends format_topics {
             }
         }
         return $formerrors;
+    }
+
+    /**
+     * Parse the custom tabs definition.
+     *
+     * One tab per line: "Tab name | Section name; Other section name" or "Tab name | https://...".
+     * Empty lines and lines starting with # are ignored.
+     *
+     * @param string $text
+     * @return array ['tabs' => [['line', 'label', 'sections' => string[], 'url' => ?string]], 'errors' => int[] line numbers]
+     */
+    public static function parse_custom_tabs(string $text): array {
+        $tabs = [];
+        $errors = [];
+        foreach (preg_split('/\R/u', $text) as $index => $line) {
+            $line = trim($line);
+            if ($line === '' || str_starts_with($line, '#')) {
+                continue;
+            }
+            $parts = explode('|', $line, 2);
+            $label = trim($parts[0]);
+            $target = trim($parts[1] ?? '');
+            if ($label === '' || $target === '') {
+                $errors[] = $index + 1;
+                continue;
+            }
+            $tab = ['line' => $index + 1, 'label' => $label, 'sections' => [], 'url' => null];
+            if (preg_match('~^https?://~i', $target)) {
+                $url = clean_param($target, PARAM_URL);
+                if ($url === '') {
+                    $errors[] = $index + 1;
+                    continue;
+                }
+                $tab['url'] = $url;
+            } else {
+                $tab['sections'] = array_values(array_filter(array_map('trim', explode(';', $target)), 'strlen'));
+                if (!$tab['sections']) {
+                    $errors[] = $index + 1;
+                    continue;
+                }
+            }
+            $tabs[] = $tab;
+        }
+        return ['tabs' => $tabs, 'errors' => $errors];
+    }
+
+    /**
+     * Normalise a section name for comparison: no tags, no case, single spaces.
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function normalise_name(string $name): string {
+        $name = html_entity_decode(strip_tags($name), ENT_QUOTES, 'UTF-8');
+        $name = preg_replace('/\s+/u', ' ', str_replace("\u{00A0}", ' ', $name));
+        return core_text::strtolower(trim($name));
     }
 
     /**

@@ -31,6 +31,7 @@ Dans *Paramètres du cours → Format de cours*, choisir **Sections avec onglets
 
 | Option | Effet |
 | --- | --- |
+| Onglets | **Un onglet par section**, ou **Onglets personnalisés** : vous choisissez vous-même les onglets et les sections qu'ils ouvrent (voir ci-dessous). |
 | L'accueil du cours n'affiche que la section générale | La page d'accueil du cours n'affiche que la section 0, chaque autre section s'ouvre sur sa propre page. En mode édition, la liste complète reste affichée pour pouvoir ajouter et déplacer les sections. |
 | Menu des sections à gauche | Affiche aussi la liste des sections à gauche du contenu (masquée sur téléphone). Activé par défaut. |
 | Sous-sections en onglets | Sur la page d'une section, les sous-sections s'affichent en onglets, une seule à la fois. En mode édition, un onglet « Tout afficher » permet de les voir toutes pour les déplacer. Activé par défaut. |
@@ -38,6 +39,25 @@ Dans *Paramètres du cours → Format de cours*, choisir **Sections avec onglets
 | Noms d'onglets courts | « Bloc de compétence 1 : Actes essentiels » devient « Bloc de compétence 1 ». Le nom complet s'affiche au survol. |
 
 Les sections et les activités sont conservées lors du changement de format.
+
+### Onglets personnalisés
+
+Choisir **Onglets personnalisés** dans l'option *Onglets*, puis saisir un onglet par ligne :
+
+```
+Informations générales | Généralités
+Espace de cours | Bloc de compétence 1 : Actes essentiels; Bloc de compétence 2 : Actes coordonnés
+Espace de certification | Evaluations et suivi des compétences
+Ressources | https://exemple.fr/ressources
+```
+
+- À gauche du `|` : le nom de l'onglet. À droite : le **nom de la section** à ouvrir (les majuscules et les espaces en trop ne comptent pas).
+- Un onglet peut regrouper plusieurs sections, séparées par des **points-virgules** : il ouvre la première accessible et reste en surbrillance sur chacune d'elles.
+- Un onglet peut aussi ouvrir une adresse web (dans un nouvel onglet du navigateur).
+- Les lignes qui commencent par `#` sont ignorées.
+- À l'enregistrement, Moodle signale les lignes mal écrites et les noms de section introuvables. **Si une section est renommée, il faut mettre à jour la liste.**
+- Un onglet n'apparaît pas pour un utilisateur qui ne peut voir aucune de ses sections.
+- Le menu de gauche continue de lister toutes les sections.
 
 ## Personnalisation
 

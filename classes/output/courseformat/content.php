@@ -94,7 +94,7 @@ class content extends content_topics {
     }
 
     /**
-     * Build the tab bar from the course sections.
+     * Build the tab bar and the section menu.
      *
      * @return array|null null when there is nothing to show
      */
@@ -106,11 +106,21 @@ class content extends content_topics {
         $canviewhidden = has_capability('moodle/course:viewhiddensections', $format->get_context());
 
         // Section shown on this page (the general section on the course home).
-        $current = $format->get_sectionnum() ?? 0;
+        $current = (int)($format->get_sectionnum() ?? 0);
         $shortnames = !empty($course->gtabsshortnames);
 
-        $tabs = [];
+        // All the sections the user can see, in course order, by section number.
+        $sections = [];
+        // Section numbers by normalised name, for the custom tabs (first section wins).
+        $bynames = [];
         foreach ($modinfo->get_listed_section_info_all() as $section) {
+            $fullname = $format->get_section_name($section);
+            foreach ([$fullname, (string)$section->name] as $name) {
+                $key = \format_grettabs::normalise_name($name);
+                if ($key !== '' && !isset($bynames[$key])) {
+                    $bynames[$key] = (int)$section->section;
+                }
+            }
             if (!$format->is_section_visible($section)) {
                 continue;
             }
@@ -119,7 +129,6 @@ class content extends content_topics {
             if (!$section->visible && !$canviewhidden) {
                 continue;
             }
-            $fullname = $format->get_section_name($section);
             $name = $fullname;
             if ($shortnames) {
                 // "Bloc de compétence 1 : Actes essentiels" becomes "Bloc de compétence 1".
@@ -128,27 +137,91 @@ class content extends content_topics {
                     $name = $parts[0];
                 }
             }
-            $tabs[] = [
+            $sections[(int)$section->section] = [
                 'name' => $name,
                 'fullname' => $fullname,
                 'title' => html_entity_decode(strip_tags($fullname), ENT_QUOTES, 'UTF-8'),
                 'url' => $format->get_tab_url($section)->out(false),
-                'active' => ((int)$section->section === (int)$current),
+                'active' => ((int)$section->section === $current),
                 'hidden' => !$section->visible,
                 'unavailable' => !$section->uservisible,
             ];
         }
 
-        if (count($tabs) < 2) {
+        if ((int)($course->gtabsmode ?? 0) === \format_grettabs::TABS_CUSTOM) {
+            $tabs = $this->export_custom_tabs($sections, $bynames, $current);
+            $hastabs = !empty($tabs);
+        } else {
+            $tabs = array_values($sections);
+            $hastabs = count($tabs) >= 2;
+        }
+        $leftmenu = !empty($course->gtabsleftmenu) && count($sections) >= 2;
+
+        if (!$hastabs && !$leftmenu) {
             return null;
         }
 
         // Colours are validated hexadecimal values.
         return [
-            'tabs' => $tabs,
-            'leftmenu' => !empty($course->gtabsleftmenu),
+            'tabs' => $hastabs ? $tabs : [],
+            'hastabs' => $hastabs,
+            'sections' => array_values($sections),
+            'leftmenu' => $leftmenu,
             'style' => '--gtabs-active:' . $format->get_tab_colour('activecolor') .
                 ';--gtabs-active-border:' . $format->get_tab_colour('activeborder') . ';',
         ];
+    }
+
+    /**
+     * Build the tabs defined by the teacher.
+     *
+     * @param array $sections visible sections data, by section number
+     * @param array $bynames section numbers by normalised name
+     * @param int $current section displayed on this page
+     * @return array
+     */
+    protected function export_custom_tabs(array $sections, array $bynames, int $current): array {
+        $course = $this->format->get_course();
+        $context = $this->format->get_context();
+        $parsed = \format_grettabs::parse_custom_tabs((string)($course->gtabscustom ?? ''));
+
+        $tabs = [];
+        foreach ($parsed['tabs'] as $definition) {
+            $label = format_string($definition['label'], true, ['context' => $context]);
+            $tab = [
+                'name' => $label,
+                'fullname' => $label,
+                'title' => html_entity_decode(strip_tags($label), ENT_QUOTES, 'UTF-8'),
+                'active' => false,
+                'hidden' => false,
+                'unavailable' => false,
+            ];
+            if ($definition['url'] !== null) {
+                $tab['url'] = $definition['url'];
+                $tab['external'] = true;
+                $tabs[] = $tab;
+                continue;
+            }
+            // Sections targeted by the tab that this user can see.
+            $targets = [];
+            foreach ($definition['sections'] as $name) {
+                $num = $bynames[\format_grettabs::normalise_name($name)] ?? null;
+                if ($num !== null && isset($sections[$num])) {
+                    $targets[$num] = $sections[$num];
+                }
+            }
+            if (!$targets) {
+                continue;
+            }
+            // The tab opens the first section the user can access.
+            $available = array_filter($targets, fn($target) => !$target['unavailable']);
+            $first = reset($available) ?: reset($targets);
+            $tab['url'] = $first['url'];
+            $tab['active'] = isset($targets[$current]);
+            $tab['unavailable'] = empty($available);
+            $tab['hidden'] = !array_filter($targets, fn($target) => !$target['hidden']);
+            $tabs[] = $tab;
+        }
+        return $tabs;
     }
 }
