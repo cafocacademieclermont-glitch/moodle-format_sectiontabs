@@ -126,11 +126,27 @@
             window.history.replaceState(null, '', window.location.pathname + window.location.search + hash);
         }
     };
+    // Tab to open for the address: #section-N (subsection), or #module-ID of a subsection or of an activity
+    // inside a subsection (Moodle uses it after adding or editing them).
     var fromHash = function() {
-        var match = /^#section-(\d+)$/.exec(window.location.hash);
-        var found = match ? tabs.filter(function(t) {
-            return t.dataset.num === match[1];
-        })[0] : null;
+        var hash = window.location.hash;
+        var found = null;
+        var match = /^#section-(\d+)$/.exec(hash);
+        if (match) {
+            found = subtabs.filter(function(t) {
+                return t.dataset.num === match[1];
+            })[0];
+        }
+        match = /^#module-(\d+)$/.exec(hash);
+        if (!found && match) {
+            var target = document.getElementById('module-' + match[1]);
+            var item = target && target.closest('#region-main li[data-for="cmitem"].modtype_subsection');
+            if (item) {
+                found = subtabs.filter(function(t) {
+                    return t.dataset.gsubtab === item.dataset.id;
+                })[0];
+            }
+        }
         return found || root.querySelector('.gsubtabs-active') || tabs[0];
     };
     tabs.forEach(function(tab, index) {

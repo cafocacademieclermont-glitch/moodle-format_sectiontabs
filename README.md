@@ -53,20 +53,27 @@ Les sections et les activités sont conservées lors du changement de format.
 
 ### Onglets personnalisés
 
-1. Dans *Paramètres du cours → Format de cours → Onglets*, choisir **Onglets personnalisés**, puis suivre le lien
-   **Onglets du cours** (aussi accessible depuis le menu **Plus** du cours).
-2. La page propose un bloc par onglet, pré-rempli avec un onglet par section. Pour chaque onglet :
-   - **Nom de l'onglet** ;
-   - **Sections** : une ou plusieurs sections, choisies dans une liste. Avec plusieurs sections, l'onglet ouvre la
-     première accessible et reste en surbrillance sur chacune d'elles ;
-   - **Ou adresse web** (au lieu de sections), ouverte dans une nouvelle fenêtre ;
-   - **Position** dans la barre (1, 2, 3…).
-3. **Supprimer cet onglet** / **Ajouter un onglet**, puis **Enregistrer**.
+Dans *Paramètres du cours → Format de cours → Onglets*, choisir **Onglets personnalisés** : un bloc par onglet
+s'affiche juste en dessous, dans l'ordre de la barre (pré-rempli avec un onglet par section la première fois) :
+
+- **Onglet N : nom** — vider le nom supprime l'onglet ;
+- **Onglet N : sections** — une ou plusieurs sections, choisies dans une liste avec recherche. Avec plusieurs sections,
+  l'onglet ouvre la première accessible et reste en surbrillance sur chacune d'elles ;
+- **Onglet N : ou adresse web** — à la place de sections, ouverte dans une nouvelle fenêtre.
+
+Trois blocs vides permettent d'ajouter des onglets ; enregistrer en propose trois autres.
 
 Les onglets désignent les sections par leur identifiant : renommer ou déplacer une section ne casse pas les onglets.
 Ils sont conservés lors d'une sauvegarde / restauration, d'une duplication ou d'une importation du cours.
 Un onglet n'apparaît pas pour un utilisateur qui ne peut voir aucune de ses sections. Le menu de gauche liste toujours
 toutes les sections.
+
+### Mode édition
+
+- Sur la page d'une section, le bouton **Ajouter une section** est proposé (Moodle ne l'affiche normalement que sur
+  l'accueil du cours).
+- Après l'ajout ou la modification d'une sous-section, son onglet s'ouvre automatiquement.
+- L'onglet **Tout afficher** des sous-sections montre toutes les sous-sections pour les déplacer.
 
 ## Personnalisation
 

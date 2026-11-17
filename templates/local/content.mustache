@@ -55,6 +55,12 @@
             {{> format_sectiontabs/local/subtabs }}
         {{/gsubtabs}}
         {{> core_courseformat/local/content }}
+        {{! On a section page, Moodle hides the "Add section" button: it is displayed here in editing mode. }}
+        {{#singlesection}}
+            {{#numsections}}
+                {{> core_courseformat/local/content/addsection }}
+            {{/numsections}}
+        {{/singlesection}}
         {{#gnav}}
             {{> format_sectiontabs/local/navigation }}
         {{/gnav}}
@@ -66,6 +72,11 @@
         {{> format_sectiontabs/local/subtabs }}
     {{/gsubtabs}}
     {{> core_courseformat/local/content }}
+    {{#singlesection}}
+        {{#numsections}}
+            {{> core_courseformat/local/content/addsection }}
+        {{/numsections}}
+    {{/singlesection}}
     {{#gnav}}
         {{> format_sectiontabs/local/navigation }}
     {{/gnav}}
