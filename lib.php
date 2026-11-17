@@ -348,7 +348,8 @@ class format_sectiontabs extends format_topics {
                 } else if ($tab['sectionids'] && $tab['url'] !== '') {
                     $formerrors["gtaburl_$i"] = get_string('tabtarget_both', 'format_sectiontabs');
                 }
-                if ($tab['url'] !== '' && (!preg_match('~^https?://~i', $tab['url']) || clean_param($tab['url'], PARAM_URL) === '')) {
+                $validurl = preg_match('~^https?://~i', $tab['url']) && clean_param($tab['url'], PARAM_URL) !== '';
+                if ($tab['url'] !== '' && !$validurl) {
                     $formerrors["gtaburl_$i"] = get_string('taburl_invalid', 'format_sectiontabs');
                 }
             }
