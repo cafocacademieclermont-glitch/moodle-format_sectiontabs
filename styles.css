@@ -4,6 +4,19 @@
  * (choisie automatiquement pour un contraste suffisant) et --gtabs-active-border.
  */
 
+/* Texte lu par les lecteurs d'écran seulement (identique de Moodle 4.5 à 5.x, quelle que soit la version de Bootstrap). */
+.gtabs-sr {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
 /* Barre d'onglets. */
 .gtabs {
     background-color: var(--bs-body-bg, #fff);

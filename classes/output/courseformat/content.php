@@ -141,6 +141,7 @@ class content extends content_topics {
         }
         return [
             'uniqid' => \html_writer::random_id('gsubtabs'),
+            'sectionid' => $modinfo->get_section_info($sectionnum)->id,
             'subtabs' => $subtabs,
             'editing' => $format->show_editor(),
             'style' => $format->get_tab_style(),

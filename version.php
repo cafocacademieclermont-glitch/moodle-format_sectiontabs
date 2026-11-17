@@ -25,10 +25,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'format_sectiontabs';
-$plugin->version   = 2026111706;
-$plugin->requires  = 2026100200; // Moodle 5.3.
+$plugin->version   = 2026111800;
+$plugin->requires  = 2024100700; // Moodle 4.5.
+$plugin->supported = [405, 503]; // Moodle 4.5 to 5.3.
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0';
+$plugin->release   = '1.1';
 $plugin->dependencies = [
     'format_topics' => ANY_VERSION,
 ];

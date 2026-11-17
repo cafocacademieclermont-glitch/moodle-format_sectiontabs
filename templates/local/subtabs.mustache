@@ -22,6 +22,7 @@
     Example context (json):
     {
         "uniqid": "gsubtabs1",
+        "sectionid": 42,
         "style": "--gtabs-active:#ecb21e;",
         "subtabs": [
             {"cmid": 10, "num": 12, "name": "Classe virtuelle", "title": "Classe virtuelle", "active": true},
@@ -31,14 +32,14 @@
         "editing": true
     }
 }}
-<div id="{{uniqid}}" class="gsubtabs" style="{{style}}">
+<div id="{{uniqid}}" class="gsubtabs" style="{{style}}" data-sectionid="{{sectionid}}">
     <ul class="gsubtabs-list" role="tablist" aria-label="{{#str}} subtabsnav, format_sectiontabs {{/str}}">
         {{#subtabs}}
         <li class="gsubtabs-item" role="presentation">
             <a class="gsubtabs-tab{{#active}} gsubtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}{{#unavailable}} gsubtabs-unavailable{{/unavailable}}"
                id="{{uniqid}}-tab-{{cmid}}" href="#section-{{num}}" role="tab" aria-controls="module-{{cmid}}"
                aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}" tabindex="{{#active}}0{{/active}}{{^active}}-1{{/active}}"
-               title="{{title}}" data-gsubtab="{{cmid}}" data-num="{{num}}">{{{name}}}{{#hidden}}<span class="visually-hidden"> ({{#str}} hiddenfromstudents, format_sectiontabs {{/str}})</span>{{/hidden}}{{#unavailable}}<span class="visually-hidden"> ({{#str}} notavailable, format_sectiontabs {{/str}})</span>{{/unavailable}}</a>
+               title="{{title}}" data-gsubtab="{{cmid}}" data-num="{{num}}">{{{name}}}{{#hidden}}<span class="gtabs-sr"> ({{#str}} hiddenfromstudents, format_sectiontabs {{/str}})</span>{{/hidden}}{{#unavailable}}<span class="gtabs-sr"> ({{#str}} notavailable, format_sectiontabs {{/str}})</span>{{/unavailable}}</a>
         </li>
         {{/subtabs}}
         {{#editing}}
@@ -58,6 +59,22 @@
     var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-gsubtab]'));
     // The hidden subsections are hidden by a style rule rather than a class on the
     // elements, so that they stay hidden when the course editor re-renders them.
+    // Per section memory (this browser tab only): last opened subsection, and the subsections already seen.
+    var storekey = 'format_sectiontabs:' + root.dataset.sectionid + ':';
+    var load = function(name) {
+        try {
+            return window.sessionStorage.getItem(storekey + name);
+        } catch (e) {
+            return null;
+        }
+    };
+    var save = function(name, value) {
+        try {
+            window.sessionStorage.setItem(storekey + name, value);
+        } catch (e) {
+            // Storage unavailable: no memory, the first tab is opened.
+        }
+    };
     var rules = document.createElement('style');
     document.head.appendChild(rules);
     var show = function(tab) {
@@ -75,6 +92,9 @@
             }
         });
         rules.textContent = hidden.length ? hidden.join(',') + '{display:none !important;}' : '';
+        if (tab.dataset.gsubtab !== 'all') {
+            save('last', tab.dataset.gsubtab);
+        }
         updateNav(tab);
     };
     // Previous / next bar: previous / next subsection while there is one, else previous / next section.
@@ -126,8 +146,8 @@
             window.history.replaceState(null, '', window.location.pathname + window.location.search + hash);
         }
     };
-    // Tab to open for the address: #section-N (subsection), or #module-ID of a subsection or of an activity
-    // inside a subsection (Moodle uses it after adding or editing them).
+    // Tab named by the address: #section-N (subsection), or #module-ID of a subsection or of an activity
+    // inside a subsection (Moodle 5 uses it after adding or editing them). Null when none.
     var fromHash = function() {
         var hash = window.location.hash;
         var found = null;
@@ -147,7 +167,31 @@
                 })[0];
             }
         }
-        return found || root.querySelector('.gsubtabs-active') || tabs[0];
+        return found || null;
+    };
+    var byId = function(cmid) {
+        return subtabs.filter(function(t) {
+            return t.dataset.gsubtab === cmid;
+        })[0] || null;
+    };
+    // Subsections that were not there on the last visit: just created (Moodle 4.5 returns to the section
+    // without saying which one was added).
+    var ids = subtabs.map(function(t) {
+        return t.dataset.gsubtab;
+    });
+    var known = null;
+    try {
+        known = JSON.parse(load('known'));
+    } catch (e) {
+        known = null;
+    }
+    save('known', JSON.stringify(ids));
+    var newtabs = Array.isArray(known) ? subtabs.filter(function(t) {
+        return known.indexOf(t.dataset.gsubtab) === -1;
+    }) : [];
+    var initial = function() {
+        return fromHash() || newtabs[newtabs.length - 1] || byId(load('last')) ||
+            root.querySelector('.gsubtabs-active') || tabs[0];
     };
     tabs.forEach(function(tab, index) {
         tab.addEventListener('click', function(e) {
@@ -189,8 +233,11 @@
         });
     }
     window.addEventListener('hashchange', function() {
-        show(fromHash());
+        var tab = fromHash();
+        if (tab) {
+            show(tab);
+        }
     });
-    show(fromHash());
+    show(initial());
 })();
 {{/js}}

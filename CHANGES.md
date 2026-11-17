@@ -1,5 +1,18 @@
 # Historique des versions
 
+## 1.1 (stable) — 18 novembre 2026
+
+- **Compatible de Moodle 4.5 à Moodle 5.3** (testé sur 4.5.16+ et 5.3.1 avec un cours réel de 9 sections et
+  38 sous-sections).
+- Les onglets de sous-sections mémorisent, pour chaque section, le dernier onglet ouvert ; une sous-section qui vient
+  d'être créée s'ouvre automatiquement (aussi sur Moodle 4.5, qui ne l'indique pas dans l'adresse).
+- Textes pour lecteurs d'écran masqués par une classe propre au plugin, identique en Bootstrap 4 (Moodle 4.5) et
+  Bootstrap 5 (Moodle 5.x).
+
+À savoir pour Moodle 4.5 : l'activité « Sous-section » y est désactivée par défaut
+(*Administration du site → Plugins → Activités → Gérer les activités*) ; sans elle, Moodle affiche les sous-sections
+comme des sections ordinaires.
+
 ## 1.0 (stable) — 17 novembre 2026
 
 Première version stable du format **Onglets et menu de sections** (`format_sectiontabs`) pour Moodle 5.3.

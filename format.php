@@ -35,7 +35,10 @@ $context = context_course::instance($course->id);
 
 if (($marker >= 0) && has_capability('moodle/course:setcurrentsection', $context) && confirm_sesskey()) {
     $course->marker = $marker;
-    if ($marker == 0) {
+    if (!method_exists(\core_courseformat\local\sectionactions::class, 'set_marker')) {
+        // Moodle 4.5.
+        course_set_marker($course->id, $marker);
+    } else if ($marker == 0) {
         \core_courseformat\formatactions::section($course->id)->remove_all_markers();
     } else {
         $sectioninfo = get_fast_modinfo($course->id)->get_section_info($marker);

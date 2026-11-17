@@ -1,6 +1,6 @@
 # Onglets et menu de sections (format_sectiontabs)
 
-**Version 1.0 (stable)** — Moodle 5.3. Voir [CHANGES.md](CHANGES.md).
+**Version 1.1 (stable)** — Moodle 4.5 à 5.3. Voir [CHANGES.md](CHANGES.md).
 
 Format de cours Moodle qui reprend le format standard **Sections** (`format_topics`) et ajoute
 au-dessus de chaque page du cours une **barre d'onglets automatique** donnant accès à toutes les sections,
@@ -18,11 +18,11 @@ dans l'esprit du format « une section par onglet ».
 
 ## Compatibilité
 
-Moodle 5.3 (testé sur 5.3.1). Le format standard **Sections** (`format_topics`) doit être présent (il l'est toujours, c'est un format du cœur de Moodle).
+Moodle 4.5 à 5.3 (testé sur 4.5.16+ et 5.3.1). Sur Moodle 4.5, activer l'activité « Sous-section » pour bénéficier des sous-sections en onglets. Le format standard **Sections** (`format_topics`) doit être présent (il l'est toujours, c'est un format du cœur de Moodle).
 
 ## Installation (administrateur)
 
-1. Copier le dossier dans `public/course/format/sectiontabs` (le dossier doit s'appeler `sectiontabs`),
+1. Copier le dossier dans `public/course/format/sectiontabs` (Moodle 5.1 et suivants) ou `course/format/sectiontabs` (Moodle 4.5 et 5.0) ; le dossier doit s'appeler `sectiontabs`,
    ou installer le zip depuis *Administration du site → Plugins → Installer des plugins*.
 2. Lancer la mise à jour depuis *Administration du site → Notifications*.
 3. Facultatif : régler les couleurs dans *Administration du site → Plugins → Formats de cours → Onglets et menu de sections*.
@@ -110,13 +110,13 @@ L'intégration continue (GitHub Actions) contrôle chaque push : syntaxe PHP, r�
 
 Pour publier une version :
 
-1. Dans `version.php`, augmenter `$plugin->version` (AAAAMMJJXX) et `$plugin->release` (par exemple `1.1`) ;
+1. Dans `version.php`, augmenter `$plugin->version` (AAAAMMJJXX) et `$plugin->release` (par exemple `1.2`) ;
    `$plugin->maturity = MATURITY_STABLE` pour une version stable (sinon la release est marquée « pré-version »).
-2. Ajouter une section `## 1.1` en tête de `CHANGES.md` : elle sert de notes de version.
+2. Ajouter une section `## 1.2` en tête de `CHANGES.md` : elle sert de notes de version.
 3. Pousser sur `main`, puis dans GitHub : **Actions → Release → Run workflow**.
-   (Autre possibilité : pousser une étiquette `v1.1`, qui doit correspondre à `$plugin->release`.)
+   (Autre possibilité : pousser une étiquette `v1.2`, qui doit correspondre à `$plugin->release`.)
 
-Le workflow relance les contrôles, crée l'étiquette `v1.1`, fabrique `format_sectiontabs_1.1.zip` (dossier
+Le workflow relance les contrôles, crée l'étiquette `v1.2`, fabrique `format_sectiontabs_1.2.zip` (dossier
 `sectiontabs/`, sans le dossier `.github`) et publie la release avec ce zip et les notes de `CHANGES.md`.
 Il refuse de republier une version existante.
 
