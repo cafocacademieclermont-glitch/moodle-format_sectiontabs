@@ -1,0 +1,45 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_sectiontabs/local/navigation
+
+    Previous / next bar at the bottom of a section. The subsection tabs script turns the links
+    into previous / next subsection links while there are subsections left.
+
+    Example context (json):
+    {
+        "style": "--gtabs-active:#ecb21e;",
+        "prev": {"title": "Accueil", "url": "#"},
+        "next": {"title": "Bloc 2", "url": "#"}
+    }
+}}
+<nav class="gnav" style="{{style}}" aria-label="{{#str}} navlabel, format_sectiontabs {{/str}}"
+     data-prev-url="{{prev.url}}" data-prev-name="{{prev.title}}"
+     data-next-url="{{next.url}}" data-next-name="{{next.title}}"
+     data-str-prevsection="{{#str}} navprevsection, format_sectiontabs {{/str}}"
+     data-str-nextsection="{{#str}} navnextsection, format_sectiontabs {{/str}}"
+     data-str-prevsubsection="{{#str}} navprevsubsection, format_sectiontabs {{/str}}"
+     data-str-nextsubsection="{{#str}} navnextsubsection, format_sectiontabs {{/str}}">
+    <a class="gnav-link gnav-prev{{^prev}} d-none{{/prev}}" href="{{prev.url}}{{^prev}}#{{/prev}}">
+        <span class="gnav-kind"><span aria-hidden="true">&larr;</span> <span class="gnav-kindtext">{{#str}} navprevsection, format_sectiontabs {{/str}}</span></span>
+        <span class="gnav-name">{{prev.title}}</span>
+    </a>
+    <a class="gnav-link gnav-next{{^next}} d-none{{/next}}" href="{{next.url}}{{^next}}#{{/next}}">
+        <span class="gnav-kind"><span class="gnav-kindtext">{{#str}} navnextsection, format_sectiontabs {{/str}}</span> <span aria-hidden="true">&rarr;</span></span>
+        <span class="gnav-name">{{next.title}}</span>
+    </a>
+</nav>

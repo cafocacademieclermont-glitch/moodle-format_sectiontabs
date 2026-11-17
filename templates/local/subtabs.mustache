@@ -75,6 +75,46 @@
             }
         });
         rules.textContent = hidden.length ? hidden.join(',') + '{display:none !important;}' : '';
+        updateNav(tab);
+    };
+    // Previous / next bar: previous / next subsection while there is one, else previous / next section.
+    var nav = document.querySelector('#region-main .gnav');
+    var subtabs = tabs.filter(function(t) {
+        return t.dataset.gsubtab !== 'all';
+    });
+    // Name of the data-str-{direction}{kind} attribute in the dataset (e.g. strPrevsection).
+    var strkey = function(direction, kind) {
+        return 'str' + direction.charAt(0).toUpperCase() + direction.slice(1) + kind;
+    };
+    var configure = function(link, direction, subtab) {
+        if (!link) {
+            return;
+        }
+        var kind = link.querySelector('.gnav-kindtext');
+        var name = link.querySelector('.gnav-name');
+        if (subtab) {
+            link.href = '#section-' + subtab.dataset.num;
+            link.dataset.gsubtabTarget = subtab.id;
+            kind.textContent = nav.dataset[strkey(direction, 'subsection')];
+            name.textContent = subtab.getAttribute('title');
+            link.classList.remove('d-none');
+            return;
+        }
+        delete link.dataset.gsubtabTarget;
+        var url = nav.dataset[direction + 'Url'];
+        kind.textContent = nav.dataset[strkey(direction, 'section')];
+        name.textContent = nav.dataset[direction + 'Name'] || '';
+        link.href = url || '#';
+        link.classList.toggle('d-none', !url);
+    };
+    var updateNav = function(tab) {
+        if (!nav) {
+            return;
+        }
+        var index = subtabs.indexOf(tab);
+        configure(nav.querySelector('.gnav-prev'), 'prev', index > 0 ? subtabs[index - 1] : null);
+        configure(nav.querySelector('.gnav-next'), 'next',
+            index >= 0 && index < subtabs.length - 1 ? subtabs[index + 1] : null);
     };
     var select = function(tab, focus) {
         show(tab);
@@ -118,6 +158,20 @@
             }
         });
     });
+    if (nav) {
+        nav.querySelectorAll('.gnav-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                var target = link.dataset.gsubtabTarget && document.getElementById(link.dataset.gsubtabTarget);
+                if (!target) {
+                    // Link to another section: normal navigation.
+                    return;
+                }
+                e.preventDefault();
+                select(target, true);
+                root.scrollIntoView({block: 'start'});
+            });
+        });
+    }
     window.addEventListener('hashchange', function() {
         show(fromHash());
     });

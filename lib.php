@@ -75,6 +75,10 @@ class format_sectiontabs extends format_topics {
             'default' => 1,
             'type' => PARAM_BOOL,
         ];
+        $options['gtabsnav'] = [
+            'default' => 1,
+            'type' => PARAM_BOOL,
+        ];
         $options['gtabsactivecolor'] = [
             'default' => '',
             'type' => PARAM_TEXT,
@@ -120,6 +124,12 @@ class format_sectiontabs extends format_topics {
             $options['gtabssubtabs'] += [
                 'label' => new lang_string('gtabssubtabs', 'format_sectiontabs'),
                 'help' => 'gtabssubtabs',
+                'help_component' => 'format_sectiontabs',
+                'element_type' => 'advcheckbox',
+            ];
+            $options['gtabsnav'] += [
+                'label' => new lang_string('gtabsnav', 'format_sectiontabs'),
+                'help' => 'gtabsnav',
                 'help_component' => 'format_sectiontabs',
                 'element_type' => 'advcheckbox',
             ];

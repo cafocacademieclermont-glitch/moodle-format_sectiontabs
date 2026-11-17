@@ -210,3 +210,57 @@
         max-width: 200px;
     }
 }
+
+/* Barre Précédent / Suivant en bas de la section. */
+.gnav {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 1rem;
+    margin: 1.5rem 0 1rem 0;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.gnav .gnav-link {
+    display: flex;
+    flex-direction: column;
+    max-width: 48%;
+    min-width: 0;
+    padding: .6rem 1rem;
+    border: 1px solid #e4e0de;
+    border-radius: 10px;
+    background-color: #f3f1f0;
+    color: #3b2f2f;
+    text-decoration: none;
+}
+
+.gnav .gnav-next {
+    margin-left: auto;
+    text-align: right;
+}
+
+.gnav a.gnav-link:hover,
+.gnav a.gnav-link:focus {
+    background-color: var(--gtabs-active, #ecb21e);
+    border-color: var(--gtabs-active, #ecb21e);
+    color: var(--gtabs-active-text, #1d2125);
+    text-decoration: none;
+}
+
+.gnav .gnav-kind {
+    font-size: .875rem;
+}
+
+.gnav .gnav-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+}
+
+.gnav a.gnav-link:focus-visible {
+    outline: 3px solid #0f6cbf;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #fff;
+}

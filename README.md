@@ -45,6 +45,7 @@ Dans *Paramètres du cours → Format de cours*, choisir **Onglets et menu de se
 | L'accueil du cours n'affiche que la section générale | La page d'accueil du cours n'affiche que la section 0, chaque autre section s'ouvre sur sa propre page. En mode édition, la liste complète reste affichée pour pouvoir ajouter et déplacer les sections. |
 | Menu des sections à gauche | Affiche aussi la liste des sections à gauche du contenu (masquée sur téléphone). Activé par défaut. |
 | Sous-sections en onglets | Sur la page d'une section, les sous-sections s'affichent en onglets, une seule à la fois. En mode édition, un onglet « Tout afficher » permet de les voir toutes pour les déplacer. Activé par défaut. |
+| Boutons Précédent / Suivant | En bas de chaque section : sous-section précédente / suivante tant qu'il en reste, puis section précédente / suivante (les sections inaccessibles sont sautées). Remplace les liens de navigation entre sections de Moodle. Activé par défaut. |
 | Couleur de l'onglet actif / de son soulignement | Code hexadécimal (ex. `#ecb21e`). Vide : couleur définie par l'administrateur pour tout le site. |
 | Noms d'onglets courts | « Bloc de compétence 1 : Actes essentiels » devient « Bloc de compétence 1 ». Le nom complet s'affiche au survol. |
 

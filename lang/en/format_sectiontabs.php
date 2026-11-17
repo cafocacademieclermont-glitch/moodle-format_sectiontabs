@@ -43,6 +43,8 @@ $string['gtabsmode_help'] = 'One tab per section: the tab bar lists every sectio
 
 Custom tabs: you define the tabs yourself, and which sections each of them opens, on the "Course tabs" page (link below, or "More" menu of the course). The section menu on the left still lists every section.';
 $string['gtabsmode_sections'] = 'One tab per section';
+$string['gtabsnav'] = 'Previous / Next buttons';
+$string['gtabsnav_help'] = 'If enabled, a bar with "Previous" and "Next" buttons is displayed at the bottom of each section. While the section has subsections left, the buttons open the previous or next subsection; on the last subsection, "Next" opens the next section. Sections the user cannot access are skipped. This bar replaces the section navigation links of Moodle.';
 $string['gtabsshortnames'] = 'Short tab names';
 $string['gtabsshortnames_help'] = 'If enabled, only the part of the section name before " : " is used as tab name. For example "Block 1 : Essential acts" becomes "Block 1". The full name is displayed when hovering the tab.';
 $string['gtabssubtabs'] = 'Subsections as tabs';
@@ -54,6 +56,11 @@ $string['managetabs'] = 'Course tabs';
 $string['managetabs_info'] = '{$a}: define the tabs and the sections they open.';
 $string['managetabs_intro'] = 'One block per tab. Give it a name, then choose the sections it opens, or a web address. A tab can group several sections: it opens the first one the user can access and stays highlighted on each of them. Empty blocks are ignored. Renaming a section does not break the tabs.';
 $string['managetabs_newcourse'] = 'Save the course first, then define the tabs from the "Course tabs" page ("More" menu of the course).';
+$string['navlabel'] = 'Previous and next';
+$string['navnextsection'] = 'Next section';
+$string['navnextsubsection'] = 'Next';
+$string['navprevsection'] = 'Previous section';
+$string['navprevsubsection'] = 'Previous';
 $string['newsection'] = 'New section';
 $string['notavailable'] = 'not available';
 $string['opensinnewwindow'] = 'opens in a new window';

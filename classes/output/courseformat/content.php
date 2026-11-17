@@ -37,7 +37,62 @@ class content extends content_topics {
         $data = parent::export_for_template($output);
         $data->gtabs = $this->export_tabs();
         $data->gsubtabs = $this->export_subtabs();
+        $data->gnav = $this->export_navigation();
+        if ($data->gnav) {
+            // The previous / next bar replaces the core section navigation and section selector.
+            unset($data->sectionnavigation, $data->sectionselector);
+        }
         return $data;
+    }
+
+    /**
+     * Previous / next section of the displayed section, among the sections the user can access.
+     *
+     * The subsection tabs script turns these links into previous / next subsection links
+     * while there are subsections left.
+     *
+     * @return array|null null when the bar is disabled or there is no single section
+     */
+    protected function export_navigation(): ?array {
+        /** @var \format_sectiontabs $format */
+        $format = $this->format;
+        $course = $format->get_course();
+        $current = $format->get_sectionnum();
+        if (empty($course->gtabsnav) || $current === null) {
+            return null;
+        }
+        $canviewhidden = has_capability('moodle/course:viewhiddensections', $format->get_context());
+        $list = [];
+        foreach ($format->get_modinfo()->get_listed_section_info_all() as $section) {
+            if (!$section->uservisible || (!$section->visible && !$canviewhidden)) {
+                continue;
+            }
+            $list[] = $section;
+        }
+        $index = null;
+        foreach ($list as $i => $section) {
+            if ((int)$section->section === (int)$current) {
+                $index = $i;
+            }
+        }
+        if ($index === null) {
+            return null;
+        }
+        $link = function (?\section_info $section) use ($format): ?array {
+            if (!$section) {
+                return null;
+            }
+            $name = $format->get_section_name($section);
+            return [
+                'title' => html_entity_decode(strip_tags($name), ENT_QUOTES, 'UTF-8'),
+                'url' => $format->get_tab_url($section)->out(false),
+            ];
+        };
+        return [
+            'prev' => $link($list[$index - 1] ?? null),
+            'next' => $link($list[$index + 1] ?? null),
+            'style' => $format->get_tab_style(),
+        ];
     }
 
     /**

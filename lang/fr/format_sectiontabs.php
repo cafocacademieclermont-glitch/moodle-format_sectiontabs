@@ -43,6 +43,8 @@ $string['gtabsmode_help'] = 'Un onglet par section : la barre d\'onglets reprend
 
 Onglets personnalisés : vous définissez vous-même les onglets et les sections que chacun ouvre, sur la page « Onglets du cours » (lien ci-dessous, ou menu « Plus » du cours). Le menu de gauche continue de lister toutes les sections.';
 $string['gtabsmode_sections'] = 'Un onglet par section';
+$string['gtabsnav'] = 'Boutons Précédent / Suivant';
+$string['gtabsnav_help'] = 'Si cette option est activée, une barre avec des boutons « Précédent » et « Suivant » s\'affiche en bas de chaque section. Tant qu\'il reste des sous-sections, les boutons ouvrent la sous-section précédente ou suivante ; sur la dernière sous-section, « Suivant » ouvre la section suivante. Les sections inaccessibles à l\'utilisateur sont sautées. Cette barre remplace les liens de navigation entre sections de Moodle.';
 $string['gtabsshortnames'] = 'Noms d\'onglets courts';
 $string['gtabsshortnames_help'] = 'Si cette option est activée, seule la partie du nom de la section placée avant « : » sert de nom d\'onglet. Par exemple, « Bloc de compétence 1 : Actes essentiels » devient « Bloc de compétence 1 ». Le nom complet s\'affiche au survol de l\'onglet.';
 $string['gtabssubtabs'] = 'Sous-sections en onglets';
@@ -54,6 +56,11 @@ $string['managetabs'] = 'Onglets du cours';
 $string['managetabs_info'] = '{$a} : définir les onglets et les sections qu\'ils ouvrent.';
 $string['managetabs_intro'] = 'Un bloc par onglet. Donnez-lui un nom, puis choisissez les sections qu\'il ouvre, ou une adresse web. Un onglet peut regrouper plusieurs sections : il ouvre la première accessible et reste en surbrillance sur chacune d\'elles. Les blocs vides sont ignorés. Renommer une section ne casse pas les onglets.';
 $string['managetabs_newcourse'] = 'Enregistrez d\'abord le cours, puis définissez les onglets depuis la page « Onglets du cours » (menu « Plus » du cours).';
+$string['navlabel'] = 'Précédent et suivant';
+$string['navnextsection'] = 'Section suivante';
+$string['navnextsubsection'] = 'Suivant';
+$string['navprevsection'] = 'Section précédente';
+$string['navprevsubsection'] = 'Précédent';
 $string['newsection'] = 'Nouvelle section';
 $string['notavailable'] = 'non disponible';
 $string['opensinnewwindow'] = 's\'ouvre dans une nouvelle fenêtre';
