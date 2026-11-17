@@ -27,7 +27,6 @@ use renderer_base;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class content extends content_topics {
-
     /**
      * Export for template.
      *
@@ -89,7 +88,7 @@ class content extends content_topics {
             'uniqid' => \html_writer::random_id('gsubtabs'),
             'subtabs' => $subtabs,
             'editing' => $format->show_editor(),
-            'style' => '--gtabs-active:' . $format->get_tab_colour('activecolor') . ';',
+            'style' => $format->get_tab_style(),
         ];
     }
 
@@ -131,7 +130,7 @@ class content extends content_topics {
             }
             $name = $fullname;
             if ($shortnames) {
-                // "Bloc de compétence 1 : Actes essentiels" becomes "Bloc de compétence 1".
+                // Short name: "Bloc de compétence 1 : Actes essentiels" becomes "Bloc de compétence 1".
                 $parts = preg_split('/\s+:\s+/u', $fullname, 2);
                 if (count($parts) === 2 && trim($parts[0]) !== '') {
                     $name = $parts[0];
@@ -167,8 +166,7 @@ class content extends content_topics {
             'hastabs' => $hastabs,
             'sections' => array_values($sections),
             'leftmenu' => $leftmenu,
-            'style' => '--gtabs-active:' . $format->get_tab_colour('activecolor') .
-                ';--gtabs-active-border:' . $format->get_tab_colour('activeborder') . ';',
+            'style' => $format->get_tab_style(),
         ];
     }
 

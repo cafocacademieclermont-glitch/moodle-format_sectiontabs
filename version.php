@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'format_grettabs';
-$plugin->version   = 2026111700;
+$plugin->version   = 2026111701;
 $plugin->requires  = 2026100200; // Moodle 5.3.
 $plugin->maturity  = MATURITY_BETA;
-$plugin->release   = '0.5.0';
+$plugin->release   = '0.5.1';
 $plugin->dependencies = [
     'format_topics' => ANY_VERSION,
 ];

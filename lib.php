@@ -36,7 +36,6 @@ use core\lang_string;
  * Course format class.
  */
 class format_grettabs extends format_topics {
-
     /** @var int One tab per section. */
     public const TABS_SECTIONS = 0;
 
@@ -148,11 +147,10 @@ class format_grettabs extends format_topics {
     }
 
     /**
-     * Check that the tab colours are valid hexadecimal colours.
+     * Add the course format options to the course form, and show the custom tabs field only when needed.
      *
-     * @param array $data
-     * @param array $files
-     * @param array $errors
+     * @param MoodleQuickForm $mform
+     * @param bool $forsection
      * @return array
      */
     public function create_edit_form_elements(&$mform, $forsection = false) {
@@ -163,6 +161,14 @@ class format_grettabs extends format_topics {
         return $elements;
     }
 
+    /**
+     * Check the tab colours and the custom tabs definition.
+     *
+     * @param array $data
+     * @param array $files
+     * @param array $errors
+     * @return array
+     */
     public function edit_form_validation($data, $files, $errors) {
         $formerrors = parent::edit_form_validation($data, $files, $errors);
         if ((int)($data['gtabsmode'] ?? self::TABS_SECTIONS) === self::TABS_CUSTOM) {
@@ -187,8 +193,11 @@ class format_grettabs extends format_topics {
                 foreach ($parsed['tabs'] as $tab) {
                     foreach ($tab['sections'] as $name) {
                         if (empty($known[self::normalise_name($name)])) {
-                            $messages[] = get_string('gtabscustom_unknown', 'format_grettabs',
-                                ['line' => $tab['line'], 'name' => s($name)]);
+                            $messages[] = get_string(
+                                'gtabscustom_unknown',
+                                'format_grettabs',
+                                ['line' => $tab['line'], 'name' => s($name)]
+                            );
                         }
                     }
                 }
@@ -274,6 +283,44 @@ class format_grettabs extends format_topics {
             $value = '#' . $value;
         }
         return preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $value) ? strtolower($value) : null;
+    }
+
+    /**
+     * Text colour readable on a background colour (WCAG contrast): white or near black.
+     *
+     * @param string $background hexadecimal colour
+     * @return string
+     */
+    public static function get_text_colour_for(string $background): string {
+        $hex = ltrim(self::clean_colour($background) ?? '#ecb21e', '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+        $luminance = function (string $hex): float {
+            $channels = [];
+            foreach ([0, 2, 4] as $offset) {
+                $value = hexdec(substr($hex, $offset, 2)) / 255;
+                $channels[] = $value <= 0.03928 ? $value / 12.92 : (($value + 0.055) / 1.055) ** 2.4;
+            }
+            return 0.2126 * $channels[0] + 0.7152 * $channels[1] + 0.0722 * $channels[2];
+        };
+        $bg = $luminance($hex);
+        $dark = $luminance('1d2125');
+        $withwhite = 1.05 / ($bg + 0.05);
+        $withdark = ($bg + 0.05) / ($dark + 0.05);
+        return $withwhite >= $withdark ? '#ffffff' : '#1d2125';
+    }
+
+    /**
+     * CSS custom properties of the tab colours.
+     *
+     * @return string
+     */
+    public function get_tab_style(): string {
+        $active = $this->get_tab_colour('activecolor');
+        return '--gtabs-active:' . $active .
+            ';--gtabs-active-text:' . self::get_text_colour_for($active) .
+            ';--gtabs-active-border:' . $this->get_tab_colour('activeborder') . ';';
     }
 
     /**

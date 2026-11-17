@@ -65,6 +65,24 @@ L'apparence est définie dans `styles.css` (classes `.gtabs`, `.gtabs-tab`, `.gt
 Le gabarit de la barre est `templates/local/tabs.mustache` et peut être surchargé par un thème
 (`theme/MONTHEME/templates/format_grettabs/local/tabs.mustache`).
 
+## Accessibilité
+
+Vérifié avec axe-core (WCAG 2.1 / 2.2 niveau AA), au clavier et avec les attributs lus par les lecteurs d'écran :
+
+- La couleur du texte de l'onglet actif (blanc ou noir) est choisie automatiquement pour garantir un contraste suffisant, quelle que soit la couleur choisie.
+- Les onglets cachés ou non disponibles ont une couleur contrastée et un contour en pointillés ; les lecteurs d'écran annoncent « caché aux étudiants », « non disponible » ou « s'ouvre dans une nouvelle fenêtre ».
+- La barre d'onglets et le menu de gauche sont des zones de navigation nommées ; la section affichée est signalée (`aria-current`).
+- Les onglets de sous-sections suivent le modèle d'onglets WAI-ARIA : flèches, Début et Fin pour changer d'onglet, une seule tabulation pour entrer et sortir de la liste.
+- Le focus clavier est bien visible ; les animations sont désactivées si l'utilisateur le demande.
+
+## Sécurité
+
+- Les noms de section et d'onglet passent par `format_string()` et les attributs sont échappés.
+- Les adresses web des onglets personnalisés doivent commencer par `http://` ou `https://` et sont nettoyées (`PARAM_URL`).
+- Les couleurs sont validées (code hexadécimal) ; une valeur invalide est remplacée par la couleur par défaut.
+- Aucune section cachée ou restreinte (« masquer complètement ») n'apparaît pour un utilisateur qui ne peut pas la voir.
+- Le plugin n'enregistre aucune donnée personnelle et n'ajoute aucun service web.
+
 ## Licence
 
 GNU GPL v3 ou ultérieure.

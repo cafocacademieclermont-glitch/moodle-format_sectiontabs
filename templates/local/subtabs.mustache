@@ -31,29 +31,31 @@
         "editing": true
     }
 }}
-<nav id="{{uniqid}}" class="gsubtabs" style="{{style}}" aria-label="{{#str}} subtabsnav, format_grettabs {{/str}}">
-    <ul class="gsubtabs-list">
+<div id="{{uniqid}}" class="gsubtabs" style="{{style}}">
+    <ul class="gsubtabs-list" role="tablist" aria-label="{{#str}} subtabsnav, format_grettabs {{/str}}">
         {{#subtabs}}
-        <li class="gsubtabs-item">
+        <li class="gsubtabs-item" role="presentation">
             <a class="gsubtabs-tab{{#active}} gsubtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}{{#unavailable}} gsubtabs-unavailable{{/unavailable}}"
-               href="#section-{{num}}" title="{{title}}" data-gsubtab="{{cmid}}" data-num="{{num}}"
-               {{#active}}aria-current="true"{{/active}}>{{{name}}}</a>
+               id="{{uniqid}}-tab-{{cmid}}" href="#section-{{num}}" role="tab" aria-controls="module-{{cmid}}"
+               aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}" tabindex="{{#active}}0{{/active}}{{^active}}-1{{/active}}"
+               title="{{title}}" data-gsubtab="{{cmid}}" data-num="{{num}}">{{{name}}}{{#hidden}}<span class="visually-hidden"> ({{#str}} hiddenfromstudents, format_grettabs {{/str}})</span>{{/hidden}}{{#unavailable}}<span class="visually-hidden"> ({{#str}} notavailable, format_grettabs {{/str}})</span>{{/unavailable}}</a>
         </li>
         {{/subtabs}}
         {{#editing}}
-        <li class="gsubtabs-item gsubtabs-item-all">
-            <a class="gsubtabs-tab gsubtabs-all" href="#" data-gsubtab="all">{{#str}} subtabsshowall, format_grettabs {{/str}}</a>
+        <li class="gsubtabs-item gsubtabs-item-all" role="presentation">
+            <a class="gsubtabs-tab gsubtabs-all" id="{{uniqid}}-tab-all" href="#" role="tab" aria-selected="false" tabindex="-1"
+               data-gsubtab="all">{{#str}} subtabsshowall, format_grettabs {{/str}}</a>
         </li>
         {{/editing}}
     </ul>
-</nav>
+</div>
 {{#js}}
 (function() {
-    var nav = document.getElementById('{{uniqid}}');
-    if (!nav) {
+    var root = document.getElementById('{{uniqid}}');
+    if (!root) {
         return;
     }
-    var tabs = Array.prototype.slice.call(nav.querySelectorAll('[data-gsubtab]'));
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-gsubtab]'));
     // The hidden subsections are hidden by a style rule rather than a class on the
     // elements, so that they stay hidden when the course editor re-renders them.
     var rules = document.createElement('style');
@@ -63,31 +65,56 @@
         tabs.forEach(function(other) {
             var on = (other === tab);
             other.classList.toggle('gsubtabs-active', on);
-            if (on) {
-                other.setAttribute('aria-current', 'true');
-            } else {
-                other.removeAttribute('aria-current');
+            other.setAttribute('aria-selected', on ? 'true' : 'false');
+            other.setAttribute('tabindex', on ? '0' : '-1');
+            if (other.dataset.gsubtab === 'all') {
+                return;
             }
-            if (!on && tab.dataset.gsubtab !== 'all' && other.dataset.gsubtab !== 'all') {
+            if (!on && tab.dataset.gsubtab !== 'all') {
                 hidden.push('#region-main li[data-for="cmitem"][data-id="' + other.dataset.gsubtab + '"]');
             }
         });
         rules.textContent = hidden.length ? hidden.join(',') + '{display:none !important;}' : '';
+    };
+    var select = function(tab, focus) {
+        show(tab);
+        if (focus) {
+            tab.focus();
+        }
+        if (window.history && window.history.replaceState) {
+            var hash = tab.dataset.num ? '#section-' + tab.dataset.num : '';
+            window.history.replaceState(null, '', window.location.pathname + window.location.search + hash);
+        }
     };
     var fromHash = function() {
         var match = /^#section-(\d+)$/.exec(window.location.hash);
         var found = match ? tabs.filter(function(t) {
             return t.dataset.num === match[1];
         })[0] : null;
-        return found || nav.querySelector('.gsubtabs-active') || tabs[0];
+        return found || root.querySelector('.gsubtabs-active') || tabs[0];
     };
-    tabs.forEach(function(tab) {
+    tabs.forEach(function(tab, index) {
         tab.addEventListener('click', function(e) {
             e.preventDefault();
-            show(tab);
-            if (window.history && window.history.replaceState) {
-                var hash = tab.dataset.num ? '#section-' + tab.dataset.num : '';
-                window.history.replaceState(null, '', window.location.pathname + window.location.search + hash);
+            select(tab, false);
+        });
+        // Keyboard navigation of the WAI-ARIA tabs pattern.
+        tab.addEventListener('keydown', function(e) {
+            var target = null;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                target = tabs[(index + 1) % tabs.length];
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                target = tabs[(index - 1 + tabs.length) % tabs.length];
+            } else if (e.key === 'Home') {
+                target = tabs[0];
+            } else if (e.key === 'End') {
+                target = tabs[tabs.length - 1];
+            } else if (e.key === ' ') {
+                target = tab;
+            }
+            if (target) {
+                e.preventDefault();
+                select(target, true);
             }
         });
     });

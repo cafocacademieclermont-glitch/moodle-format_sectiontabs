@@ -26,7 +26,6 @@ use format_topics\output\renderer as renderer_topics;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class renderer extends renderer_topics {
-
     /**
      * Render the course content with the tab bar on top.
      *

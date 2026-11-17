@@ -34,10 +34,10 @@
         {{#tabs}}
         <li class="gtabs-item">
             {{#unavailable}}
-            <span class="gtabs-tab gtabs-unavailable{{#active}} gtabs-active{{/active}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{name}}}</span>
+            <span class="gtabs-tab gtabs-unavailable{{#active}} gtabs-active{{/active}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}>{{{name}}}<span class="visually-hidden"> ({{#str}} notavailable, format_grettabs {{/str}})</span></span>
             {{/unavailable}}
             {{^unavailable}}
-            <a class="gtabs-tab{{#active}} gtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}" href="{{url}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}{{#external}} target="_blank" rel="noopener"{{/external}}>{{{name}}}</a>
+            <a class="gtabs-tab{{#active}} gtabs-active{{/active}}{{#hidden}} gtabs-hidden{{/hidden}}" href="{{url}}" title="{{title}}"{{#active}} aria-current="page"{{/active}}{{#external}} target="_blank" rel="noopener noreferrer"{{/external}}>{{{name}}}{{#hidden}}<span class="visually-hidden"> ({{#str}} hiddenfromstudents, format_grettabs {{/str}})</span>{{/hidden}}{{#external}}<span class="visually-hidden"> ({{#str}} opensinnewwindow, format_grettabs {{/str}})</span>{{/external}}</a>
             {{/unavailable}}
         </li>
         {{/tabs}}
