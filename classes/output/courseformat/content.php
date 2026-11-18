@@ -64,7 +64,7 @@ class content extends content_topics {
         $canviewhidden = has_capability('moodle/course:viewhiddensections', $format->get_context());
         $list = [];
         foreach ($format->get_modinfo()->get_listed_section_info_all() as $section) {
-            if (!$section->uservisible || (!$section->visible && !$canviewhidden)) {
+            if (!$section->uservisible || !$format->is_section_visible($section) || (!$section->visible && !$canviewhidden)) {
                 continue;
             }
             $list[] = $section;
@@ -113,11 +113,15 @@ class content extends content_topics {
         }
         $modinfo = $format->get_modinfo();
         $canviewhidden = has_capability('moodle/course:viewhiddensections', $format->get_context());
+        $parent = $modinfo->get_section_info($sectionnum);
+        if (!$parent || !$parent->uservisible || (!$parent->visible && !$canviewhidden)) {
+            return null;
+        }
         $subtabs = [];
         foreach ($modinfo->sections[$sectionnum] ?? [] as $cmid) {
             $cm = $modinfo->get_cm($cmid);
             $delegated = $cm->get_delegated_section_info();
-            if (!$delegated || !$cm->is_visible_on_course_page()) {
+            if (!$delegated || !$cm->is_visible_on_course_page() || !$format->is_section_visible($delegated)) {
                 continue;
             }
             // Hidden subsections never appear for users who cannot see hidden sections.
@@ -130,7 +134,7 @@ class content extends content_topics {
                 'num' => $delegated->section,
                 'name' => $fullname,
                 'title' => html_entity_decode(strip_tags($fullname), ENT_QUOTES, 'UTF-8'),
-                'hidden' => !$cm->visible,
+                'hidden' => !$cm->visible || !$delegated->visible || !$parent->visible,
                 // Restricted for this user but displayed with its restriction message.
                 'unavailable' => !$cm->uservisible || !$delegated->uservisible,
                 'active' => empty($subtabs),
@@ -141,7 +145,7 @@ class content extends content_topics {
         }
         return [
             'uniqid' => \html_writer::random_id('gsubtabs'),
-            'sectionid' => $modinfo->get_section_info($sectionnum)->id,
+            'sectionid' => $parent->id,
             'subtabs' => $subtabs,
             'editing' => $format->show_editor(),
             'style' => $format->get_tab_style(),
@@ -167,7 +171,6 @@ class content extends content_topics {
         // All the sections the user can see, in course order, by section id.
         $sections = [];
         foreach ($modinfo->get_listed_section_info_all() as $section) {
-            $fullname = $format->get_section_name($section);
             if (!$format->is_section_visible($section)) {
                 continue;
             }
@@ -176,6 +179,7 @@ class content extends content_topics {
             if (!$section->visible && !$canviewhidden) {
                 continue;
             }
+            $fullname = $format->get_section_name($section);
             $name = $fullname;
             if ($shortnames) {
                 // Short name: "Bloc de compétence 1 : Actes essentiels" becomes "Bloc de compétence 1".
